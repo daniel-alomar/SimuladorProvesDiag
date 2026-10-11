@@ -90,7 +90,7 @@
             <span class="w-3.5 h-3.5 rounded bg-teal-500/80 shrink-0"></span>
             <div>
               <div id="lblVNTitle" class="font-bold text-teal-900">VN (Veritables -)</div>
-              <div id="lblVNSub" class="text-[11px] text-teal-700">Sans correctes</div>
+              <div id="lblVNSub" class="text-[11px] text-teal-700">Sans correctes &rarr; Especificitat</div>
             </div>
           </div>
           <div class="flex items-center gap-2 p-2 rounded-lg bg-rose-50 border border-rose-200">
@@ -111,7 +111,7 @@
             <span class="w-3.5 h-3.5 rounded bg-amber-500/80 shrink-0"></span>
             <div>
               <div id="lblVPTitle" class="font-bold text-amber-900">VP (Veritables +)</div>
-              <div id="lblVPSub" class="text-[11px] text-amber-700">Malalts detectats</div>
+              <div id="lblVPSub" class="text-[11px] text-amber-700">Malalts detectats &rarr; Sensibilitat</div>
             </div>
           </div>
         </div>
@@ -231,7 +231,7 @@
         </div>
 
         <!-- Cutoff Slider (Threshold) -->
-        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-col gap-1.5">
+        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-col gap-2">
           <div class="flex items-center justify-between">
             <label for="sliderThreshold" class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
               <span id="lblThreshold">Llindar de decisió (Punt de tall):</span>
@@ -239,7 +239,13 @@
             <span id="txtThreshold" class="text-sm font-black text-blue-700 font-mono">50.0</span>
           </div>
           <input id="sliderThreshold" type="range" min="10" max="90" step="0.5" value="50" class="w-full cursor-pointer h-2 bg-blue-200 rounded-lg">
-          <p id="lblThresholdHelp" class="text-[11px] text-blue-700/80">Mou aquest valor per canviar el balanç entre sensibilitat i especificitat.</p>
+          
+          <div class="flex items-center justify-between gap-2 mt-1">
+            <p id="lblThresholdHelp" class="text-[11px] text-blue-700/80 leading-tight">Mou el valor per equilibrar sensibilitat i especificitat.</p>
+            <button id="btnOptimizeYouden" class="shrink-0 px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[10px] rounded-lg shadow-sm transition">
+              Òptim Youden (J)
+            </button>
+          </div>
         </div>
 
         <!-- Population Healthy Params -->
@@ -329,19 +335,19 @@
   <!-- Educational Theory Drawer / Footer Section -->
   <footer class="bg-white border-t border-slate-200 py-6 mt-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <h3 id="theoryHeading" class="text-sm font-bold text-slate-900 mb-2">Conceptes clau a tenir en compte:</h3>
+      <h3 id="theoryHeading" class="text-sm font-bold text-slate-900 mb-2">Com es tria el llindar i com interpretar les corbes:</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 leading-relaxed">
         <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-          <strong id="card1Title" class="text-slate-900 block mb-1">1. Posició relativa de les corbes:</strong>
-          <span id="card1Text">La corba sana no està sempre a l'esquerra. Si una malaltia cursa amb deficiència d'un marcador (ex: plaquetes baixes, hemoglobina baixa), la corba patològica se situa a l'esquerra i el test és positiu per sota del llindar.</span>
+          <strong id="card1Title" class="text-slate-900 block mb-1">1. Qui fixa el llindar de decisió:</strong>
+          <span id="card1Text">El defineixen societats clíniques segons el propòsit: cribratge (on es prioritza la Sensibilitat per no perdre cap malalt) o confirmació (on es prioritza l'Especificitat per evitar tractaments nocius innecessaris).</span>
         </div>
         <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-          <strong id="card2Title" class="text-slate-900 block mb-1">2. Dispersió desigual (&sigma;):</strong>
-          <span id="card2Text">En moltes patologies, els malalts presenten una dispersió més alta que els sans (major variabilitat biològica). Això fa que les cues de la corba es comportin de manera asimètrica.</span>
+          <strong id="card2Title" class="text-slate-900 block mb-1">2. Direccionalitat del test:</strong>
+          <span id="card2Text">Si la patologia cursa amb excés del marcador (troponina, PCR), valors alts indiquen malaltia. Si cursa amb dèficit (anèmia, plaquetes), valors baixos indiquen malaltia i la corba de casos queda a l'esquerra.</span>
         </div>
         <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
-          <strong id="card3Title" class="text-slate-900 block mb-1">3. El paper de la prevalença:</strong>
-          <span id="card3Text">La sensibilitat i especificitat són propietats tècniques del test. En canvi, el Valor Predictiu Positiu (VPP) depèn dràsticament de la prevalença: en malalties rares, fins i tot un test molt específic tindrà molts falsos positius en termes absoluts.</span>
+          <strong id="card3Title" class="text-slate-900 block mb-1">3. Matemàtica del llindar òptim:</strong>
+          <span id="card3Text">L'Índex de Youden (J = Sensibilitat + Especificitat - 1) identifica el tall que ofereix el màxim equilibri conjunt, corresponent al punt de la corba ROC amb major distància vertical respecte a la diagonal d'atzar.</span>
         </div>
       </div>
     </div>
@@ -379,13 +385,13 @@
         dirHigherBadge: "Valors ALTS → Malaltia",
         dirLowerBadge: "Valors BAIXOS → Malaltia",
         lblVNTitle: "VN (Veritables -)",
-        lblVNSub: "Sans correctes",
+        lblVNSub: "Sans correctes → Especificitat",
         lblFPTitle: "FP (Falsos +)",
         lblFPSub: "Falses alarmes",
         lblFNTitle: "FN (Falsos -)",
         lblFNSub: "Malalts no detectats",
         lblVPTitle: "VP (Veritables +)",
-        lblVPSub: "Malalts detectats",
+        lblVPSub: "Malalts detectats → Sensibilitat",
         matrixTitle: "Matriu de Confusió Teòrica",
         matrixCohort: "Població N = 1.000",
         colHeaderDiseased: "Malalt Real",
@@ -406,7 +412,8 @@
         dirLowerTitle: "Valor Baix → Malalt",
         dirLowerSub: "Ex: Plaquetes, CD4",
         lblThreshold: "Llindar de decisió (Punt de tall):",
-        lblThresholdHelp: "Mou aquest valor per canviar el balanç entre sensibilitat i especificitat.",
+        lblThresholdHelp: "Mou el valor per equilibrar sensibilitat i especificitat.",
+        btnOptimizeYouden: "Òptim Youden (J)",
         lblPopHealthy: "Població SENSE Malaltia",
         tagControl: "Control",
         lblMeanH: "Mitjana (μsa)",
@@ -421,13 +428,13 @@
         lblIntrinsicTitle: "Rendiment Intrínsec",
         lblSensTitle: "Sensibilitat",
         lblSpecTitle: "Especificitat",
-        theoryHeading: "Conceptes clau a tenir en compte:",
-        card1Title: "1. Posició relativa de les corbes:",
-        card1Text: "La corba sana no està sempre a l'esquerra. Si una malaltia cursa amb deficiència d'un marcador (ex: plaquetes baixes, hemoglobina baixa), la corba patològica se situa a l'esquerra i el test és positiu per sota del llindar.",
-        card2Title: "2. Dispersió desigual (σ):",
-        card2Text: "En moltes patologies, els malalts presenten una dispersió més alta que els sans (major variabilitat biològica). Això fa que les cues de la corba es comportin de manera asimètrica.",
-        card3Title: "3. El paper de la prevalença:",
-        card3Text: "La sensibilitat i especificitat són propietats tècniques del test. En canvi, el Valor Predictiu Positiu (VPP) depèn dràsticament de la prevalença: en malalties rares, fins i tot un test molt específic tindrà molts falsos positius en termes absoluts.",
+        theoryHeading: "Com es tria el llindar i com interpretar les corbes:",
+        card1Title: "1. Qui fixa el llindar de decisió:",
+        card1Text: "El defineixen societats clíniques segons el propòsit: cribratge (on es prioritza la Sensibilitat per no perdre cap malalt) o confirmació (on es prioritza l'Especificitat per evitar tractaments nocius innecessaris).",
+        card2Title: "2. Direccionalitat del test:",
+        card2Text: "Si la patologia cursa amb excés del marcador (troponina, PCR), valors alts indiquen malaltia. Si cursa amb dèficit (anèmia, plaquetes), valors baixos indiquen malaltia i la corba de casos queda a l'esquerra.",
+        card3Title: "3. Matemàtica del llindar òptim:",
+        card3Text: "L'Índex de Youden (J = Sensibilitat + Especificitat - 1) identifica el tall que ofereix el màxim equilibri conjunt, corresponent al punt de la corba ROC amb major distància vertical respecte a la diagonal d'atzar.",
         curveHealthy: "Sense malaltia",
         curveDisease: "Amb malaltia",
         thresholdLegend: "Llindar: ",
@@ -451,13 +458,13 @@
         dirHigherBadge: "Valores ALTOS → Enfermedad",
         dirLowerBadge: "Valores BAJOS → Enfermedad",
         lblVNTitle: "VN (Verdaderos -)",
-        lblVNSub: "Sanos correctos",
+        lblVNSub: "Sanos correctos → Especificidad",
         lblFPTitle: "FP (Falsos +)",
         lblFPSub: "Falsas alarmas",
         lblFNTitle: "FN (Falsos -)",
         lblFNSub: "Enfermos no detectados",
         lblVPTitle: "VP (Verdaderos +)",
-        lblVPSub: "Enfermos detectados",
+        lblVPSub: "Enfermos detectados → Sensibilidad",
         matrixTitle: "Matriz de Confusión Teórica",
         matrixCohort: "Población N = 1.000",
         colHeaderDiseased: "Enfermo Real",
@@ -478,7 +485,8 @@
         dirLowerTitle: "Valor Bajo → Enfermo",
         dirLowerSub: "Ej: Plaquetas, CD4",
         lblThreshold: "Umbral de decisión (Punto de corte):",
-        lblThresholdHelp: "Mueve este valor para balancear sensibilidad y especificidad.",
+        lblThresholdHelp: "Mueve el valor para equilibrar sensibilidad y especificidad.",
+        btnOptimizeYouden: "Óptimo Youden (J)",
         lblPopHealthy: "Población SIN Enfermedad",
         tagControl: "Control",
         lblMeanH: "Media (μsano)",
@@ -493,13 +501,13 @@
         lblIntrinsicTitle: "Rendimiento Intrínseco",
         lblSensTitle: "Sensibilidad",
         lblSpecTitle: "Especificidad",
-        theoryHeading: "Conceptos clave a tener en cuenta:",
-        card1Title: "1. Posición relativa de las curvas:",
-        card1Text: "La curva sana no siempre está a la izquierda. Si una patología cursa con déficit de un biomarcador (ej: plaquetas bajas, anemia), la curva patológica se sitúa a la izquierda y el test es positivo por debajo del umbral.",
-        card2Title: "2. Dispersión desigual (σ):",
-        card2Text: "En muchas patologías, los enfermos presentan mayor dispersión que los sanos (mayor variabilidad biológica). Esto produce asimetrías importantes en las colas de la distribución.",
-        card3Title: "3. El papel de la prevalencia:",
-        card3Text: "La sensibilidad y especificidad son propiedades técnicas intrínsecas del test. Sin embargo, el Valor Predictivo Positivo (VPP) depende críticamente de la prevalencia: en enfermedades raras, un test muy específico puede dar muchos falsos positivos absolutos.",
+        theoryHeading: "Cómo se elige el umbral y cómo interpretar las curvas:",
+        card1Title: "1. Quién fija el umbral de decisión:",
+        card1Text: "Lo definen comités clínicos según el objetivo: cribado (donde se prioriza la Sensibilidad para no perder ningún enfermo) o confirmación (donde se prioriza la Especificidad para evitar tratamientos dañinos innecesarios).",
+        card2Title: "2. Direccionalidad del test:",
+        card2Text: "Si la patología cursa con exceso del biomarcador (troponina, PCR), valores altos indican enfermedad. Si cursa con déficit (anemia, plaquetas), valores bajos indican enfermedad y la curva patológica queda a la izquierda.",
+        card3Title: "3. Matemática del corte óptimo:",
+        card3Text: "El Índice de Youden (J = Sensibilidad + Especificidad - 1) identifica el corte de mayor equilibrio conjunto, correspondiente al punto de la curva ROC con mayor distancia vertical respecto a la diagonal de azar.",
         curveHealthy: "Sin enfermedad",
         curveDisease: "Con enfermedad",
         thresholdLegend: "Umbral: ",
@@ -523,13 +531,13 @@
         dirHigherBadge: "HIGH values → Disease",
         dirLowerBadge: "LOW values → Disease",
         lblVNTitle: "TN (True -)",
-        lblVNSub: "Healthy correct",
+        lblVNSub: "Healthy correct → Specificity",
         lblFPTitle: "FP (False +)",
         lblFPSub: "False alarms",
         lblFNTitle: "FN (False -)",
         lblFNSub: "Missed disease",
         lblVPTitle: "TP (True +)",
-        lblVPSub: "Detected disease",
+        lblVPSub: "Detected disease → Sensitivity",
         matrixTitle: "Theoretical Confusion Matrix",
         matrixCohort: "Cohort N = 1,000",
         colHeaderDiseased: "Actual Diseased",
@@ -551,6 +559,7 @@
         dirLowerSub: "e.g., Platelets, CD4",
         lblThreshold: "Decision Threshold (Cutoff):",
         lblThresholdHelp: "Move this slider to balance sensitivity against specificity.",
+        btnOptimizeYouden: "Optimal Youden (J)",
         lblPopHealthy: "Population WITHOUT Disease",
         tagControl: "Control",
         lblMeanH: "Mean (μhealthy)",
@@ -565,13 +574,13 @@
         lblIntrinsicTitle: "Intrinsic Performance",
         lblSensTitle: "Sensitivity",
         lblSpecTitle: "Specificity",
-        theoryHeading: "Key concepts to remember:",
-        card1Title: "1. Relative curve position:",
-        card1Text: "The healthy distribution is not always on the left. In conditions characterized by deficiency (e.g. low platelet count, low hemoglobin), the disease curve lies to the left and a positive test is triggered below the cutoff.",
-        card2Title: "2. Unequal dispersion (σ):",
-        card2Text: "In many clinical settings, diseased individuals exhibit greater biological variance (higher σ) than healthy controls. This creates asymmetric tail behavior.",
-        card3Title: "3. The role of prevalence:",
-        card3Text: "Sensitivity and specificity are intrinsic technical properties of the test. Conversely, Positive Predictive Value (PPV) heavily depends on population prevalence: in rare disorders, even highly specific tests generate many absolute false alarms.",
+        theoryHeading: "How the threshold is set and curve interpretation:",
+        card1Title: "1. Who sets the cutoff:",
+        card1Text: "Clinical societies establish thresholds based on purpose: screening (where Sensitivity is maximized to avoid missed cases) or confirmation (where Specificity is prioritized to prevent harmful overtreatment).",
+        card2Title: "2. Directionality of the test:",
+        card2Text: "When pathology involves marker elevation (troponin, CRP), high values indicate disease. When it involves deficiency (anemia, platelets), lower values indicate disease and the pathological curve shifts to the left.",
+        card3Title: "3. Mathematical optimal cutoff:",
+        card3Text: "Youden's Index (J = Sensitivity + Specificity - 1) finds the operating point with maximal combined efficacy, matching the ROC curve point furthest from the diagonal line of chance.",
         curveHealthy: "Non-diseased (Healthy)",
         curveDisease: "Diseased",
         thresholdLegend: "Cutoff: ",
@@ -618,6 +627,7 @@
 
     const btnDirHigher = document.getElementById('btnDirHigher');
     const btnDirLower = document.getElementById('btnDirLower');
+    const btnOptimizeYouden = document.getElementById('btnOptimizeYouden');
     const btnReset = document.getElementById('btnReset');
     const presetSelect = document.getElementById('presetSelect');
     const directionBadge = document.getElementById('directionBadge');
@@ -708,6 +718,8 @@
 
       document.getElementById('lblThreshold').textContent = dict.lblThreshold;
       document.getElementById('lblThresholdHelp').textContent = dict.lblThresholdHelp;
+      btnOptimizeYouden.textContent = dict.btnOptimizeYouden;
+
       document.getElementById('lblPopHealthy').textContent = dict.lblPopHealthy;
       document.getElementById('tagControl').textContent = dict.tagControl;
       document.getElementById('lblMeanH').innerHTML = dict.lblMeanH;
@@ -735,16 +747,16 @@
       render();
     }
 
-    function calculateMetrics() {
-      const { meanHealthy, stdHealthy, meanDisease, stdDisease, threshold, higherIsDisease, prevalence } = state;
+    function calculateMetrics(thresholdVal = state.threshold) {
+      const { meanHealthy, stdHealthy, meanDisease, stdDisease, higherIsDisease, prevalence } = state;
 
       let sens, spec;
       if (higherIsDisease) {
-        sens = 1 - normCdf(threshold, meanDisease, stdDisease);
-        spec = normCdf(threshold, meanHealthy, stdHealthy);
+        sens = 1 - normCdf(thresholdVal, meanDisease, stdDisease);
+        spec = normCdf(thresholdVal, meanHealthy, stdHealthy);
       } else {
-        sens = normCdf(threshold, meanDisease, stdDisease);
-        spec = 1 - normCdf(threshold, meanHealthy, stdHealthy);
+        sens = normCdf(thresholdVal, meanDisease, stdDisease);
+        spec = 1 - normCdf(thresholdVal, meanHealthy, stdHealthy);
       }
 
       sens = Math.max(0, Math.min(1, sens));
@@ -789,6 +801,19 @@
         youden,
         auc
       };
+    }
+
+    function findOptimalYoudenCutoff() {
+      let bestT = state.threshold;
+      let maxJ = -2;
+      for (let t = 10; t <= 90; t += 0.25) {
+        const m = calculateMetrics(t);
+        if (m.youden > maxJ) {
+          maxJ = m.youden;
+          bestT = t;
+        }
+      }
+      return bestT;
     }
 
     function updateMetricsUI(metrics) {
@@ -837,7 +862,7 @@
       return domainX.min + ((clampedPx - padding) / plotWidth) * (domainX.max - domainX.min);
     }
 
-    function drawDensityCurves() {
+    function drawDensityCurves(metrics) {
       const { width, height } = setCanvasResolution(densityCanvas);
       const padX = 45;
       const padY = 40;
@@ -976,6 +1001,63 @@
       dCtx.textAlign = 'center';
       dCtx.fillText(dict.thresholdLegend + state.threshold.toFixed(1), cutPx, padY - 22);
 
+      // IN-CHART BADGES: ESPECIFICITAT & SENSIBILITAT (Exacte com a la imatge de referència)
+      const specBoxText = `${dict.lblSpecTitle}: ${(metrics.spec * 100).toFixed(1)}%`;
+      const sensBoxText = `${dict.lblSensTitle}: ${(metrics.sens * 100).toFixed(1)}%`;
+
+      function drawBadge(text, cx, cy, bgColor, textColor, borderColor) {
+        dCtx.font = 'bold 12px Inter, sans-serif';
+        const txtWidth = dCtx.measureText(text).width;
+        const boxW = txtWidth + 20;
+        const boxH = 26;
+        const x = cx - boxW / 2;
+        const y = cy - boxH / 2;
+
+        // Rounded rect
+        dCtx.save();
+        dCtx.fillStyle = bgColor;
+        dCtx.strokeStyle = borderColor;
+        dCtx.lineWidth = 1.5;
+        dCtx.beginPath();
+        dCtx.roundRect(x, y, boxW, boxH, 8);
+        dCtx.fill();
+        dCtx.stroke();
+
+        dCtx.fillStyle = textColor;
+        dCtx.textAlign = 'center';
+        dCtx.textBaseline = 'middle';
+        dCtx.fillText(text, cx, cy);
+        dCtx.restore();
+      }
+
+      // Calculate anchor positions for badges inside curves
+      const badgeY = yBaseline - plotHeight * 0.22;
+      const healthyBadgeX = valToPx(state.meanHealthy, width, padX);
+      const diseasedBadgeX = valToPx(state.meanDisease, width, padX);
+
+      // Draw Specificity badge (Teal theme)
+      drawBadge(specBoxText, healthyBadgeX, badgeY, 'rgba(15, 23, 42, 0.85)', '#2dd4bf', '#0d9488');
+      
+      // Draw Sensitivity badge (Amber theme)
+      drawBadge(sensBoxText, diseasedBadgeX, badgeY, 'rgba(15, 23, 42, 0.85)', '#fbbf24', '#d97706');
+
+      // Region Annotations (VN, FP, FN, VP indicators directly on canvas)
+      dCtx.font = 'bold 13px Inter, sans-serif';
+      
+      // VN position: under healthy curve on its true negative side
+      const vnValPos = state.higherIsDisease 
+        ? Math.min(state.meanHealthy, (domainX.min + cutX) / 2) 
+        : Math.max(state.meanHealthy, (cutX + domainX.max) / 2);
+      dCtx.fillStyle = '#5eead4';
+      dCtx.fillText('VN', valToPx(vnValPos, width, padX), yBaseline - plotHeight * 0.45);
+
+      // VP position: under diseased curve on its true positive side
+      const vpValPos = state.higherIsDisease 
+        ? Math.max(state.meanDisease, (cutX + domainX.max) / 2)
+        : Math.min(state.meanDisease, (domainX.min + cutX) / 2);
+      dCtx.fillStyle = '#fde68a';
+      dCtx.fillText('VP', valToPx(vpValPos, width, padX), yBaseline - plotHeight * 0.45);
+
       // Axis Line & Ticks
       dCtx.strokeStyle = '#64748b';
       dCtx.lineWidth = 1.5;
@@ -986,6 +1068,7 @@
 
       dCtx.fillStyle = '#94a3b8';
       dCtx.font = '10px Inter, sans-serif';
+      dCtx.textBaseline = 'alphabetic';
       for (let v = domainX.min; v <= domainX.max; v += 10) {
         const x = valToPx(v, width, padX);
         dCtx.beginPath();
@@ -1124,7 +1207,7 @@
 
       const metrics = calculateMetrics();
       updateMetricsUI(metrics);
-      drawDensityCurves();
+      drawDensityCurves(metrics);
       drawRocCurve(metrics);
     }
 
@@ -1138,6 +1221,12 @@
     // Slider Listeners
     sliderThreshold.addEventListener('input', (e) => {
       state.threshold = parseFloat(e.target.value);
+      render();
+    });
+
+    btnOptimizeYouden.addEventListener('click', () => {
+      const optT = findOptimalYoudenCutoff();
+      state.threshold = Math.round(optT * 2) / 2;
       render();
     });
 
