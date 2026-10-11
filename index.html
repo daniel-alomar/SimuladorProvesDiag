@@ -175,7 +175,7 @@
               </div>
 
               <!-- Metrics List -->
-              <div class="flex flex-col gap-2.5 text-xs">
+              <div class="flex flex-col gap-2 text-xs">
                 <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
                   <div class="flex justify-between text-slate-500">
                     <span id="lblVPP">VPP (Precisió +)</span>
@@ -192,18 +192,30 @@
                   <p id="lblVPNDesc" class="text-[10px] text-slate-400 mt-0.5">Probabilitat d'estar sa si el test és negatiu</p>
                 </div>
 
-                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
-                  <div class="flex justify-between text-slate-500">
-                    <span id="lblYouden">Índex Youden (J)</span>
-                    <span id="youdenVal" class="font-bold text-slate-900">--</span>
+                <div class="p-2 rounded-lg bg-blue-50/70 border border-blue-200">
+                  <div class="flex justify-between text-blue-900">
+                    <span id="lblYouden" class="font-semibold">Índex Youden (J)</span>
+                    <span id="youdenVal" class="font-black text-blue-700">--</span>
                   </div>
-                  <p id="lblYoudenDesc" class="text-[10px] text-slate-400 mt-0.5">Sensibilitat + Especificitat - 1</p>
+                  <p id="lblYoudenDesc" class="text-[10px] text-blue-800/80 mt-0.5">Sensibilitat + Especificitat - 1</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+      </div>
+
+      <div class="bg-gradient-to-r from-blue-50/80 to-indigo-50/80 border border-blue-200 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">J</div>
+          <div class="text-xs text-slate-700 space-y-1">
+            <h4 id="youdenBoxTitle" class="font-bold text-blue-950 text-sm">Què és l'Índex de Youden (J)?</h4>
+            <p id="youdenBoxText" class="leading-relaxed">
+              L'Índex de Youden mesura l'eficàcia global d'un punt de tall. Varia entre <strong>0</strong> (prova equivalent a l'atzar) i <strong>1</strong> (prova perfecta). Geomètricament a la corba ROC, el màxim Youden representa el punt amb major distància vertical respecte a la diagonal d'atzar, trobant el balanç idoni quan no es penalitza més un fals negatiu que un fals positiu.
+            </p>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -246,13 +258,21 @@
               Òptim Youden (J)
             </button>
           </div>
+          <p id="lblThresholdContext" class="text-[10px] text-blue-900/70 bg-white/70 p-1.5 rounded-lg border border-blue-200/60 leading-tight mt-0.5">
+            <strong>Qui el fixa?</strong> El defineixen societats clíniques segons si es prioritza cribratge (alta sensibilitat) o confirmació (alta especificitat).
+          </p>
         </div>
 
         <!-- Population Healthy Params -->
         <div class="p-3 bg-teal-50/50 border border-teal-200/80 rounded-xl flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <span id="lblPopHealthy" class="text-xs font-bold text-teal-900">Població SENSE Malaltia</span>
-            <span id="tagControl" class="text-[10px] font-semibold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">Control</span>
+            <div class="flex items-center gap-1.5">
+              <span id="lblPopHealthy" class="text-xs font-bold text-teal-900">Població SENSE Malaltia</span>
+              <span class="group relative cursor-help text-[11px] text-teal-700 font-bold bg-teal-100 rounded-full w-4 h-4 inline-flex items-center justify-center">?
+                <span id="tooltipControl" class="hidden group-hover:block absolute left-5 top-0 w-44 bg-slate-900 text-white text-[10px] rounded p-1.5 shadow-lg z-30 font-normal leading-tight">Controls sans utilitzats com a patró de referència negatiu.</span>
+              </span>
+            </div>
+            <span id="tagControl" class="text-[10px] font-semibold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">Control (Sa)</span>
           </div>
           
           <div>
@@ -275,8 +295,13 @@
         <!-- Population Diseased Params -->
         <div class="p-3 bg-amber-50/50 border border-amber-200/80 rounded-xl flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <span id="lblPopDisease" class="text-xs font-bold text-amber-900">Població AMB Malaltia</span>
-            <span id="tagCases" class="text-[10px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Casos</span>
+            <div class="flex items-center gap-1.5">
+              <span id="lblPopDisease" class="text-xs font-bold text-amber-900">Població AMB Malaltia</span>
+              <span class="group relative cursor-help text-[11px] text-amber-700 font-bold bg-amber-100 rounded-full w-4 h-4 inline-flex items-center justify-center">?
+                <span id="tooltipCases" class="hidden group-hover:block absolute left-5 top-0 w-44 bg-slate-900 text-white text-[10px] rounded p-1.5 shadow-lg z-30 font-normal leading-tight">Casos confirmats diagnosticats mitjançant prova estàndard (*gold standard*).</span>
+              </span>
+            </div>
+            <span id="tagCases" class="text-[10px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Casos (Malalt)</span>
           </div>
 
           <div>
@@ -405,6 +430,8 @@
         lblVPNDesc: "Probabilitat d'estar sa si el test és negatiu",
         lblYouden: "Índex Youden (J)",
         lblYoudenDesc: "Sensibilitat + Especificitat - 1",
+        youdenBoxTitle: "Què és l'Índex de Youden (J)?",
+        youdenBoxText: "L'Índex de Youden mesura l'eficàcia global d'un punt de tall. Varia entre 0 (prova equivalent a l'atzar) i 1 (prova perfecta). Geomètricament a la corba ROC, el màxim Youden representa el punt amb major distància vertical respecte a la diagonal d'atzar, trobant el balanç idoni quan no es penalitza més un fals negatiu que un fals positiu.",
         settingsTitle: "Configuració del Model",
         lblDirection: "Interpretació del resultat:",
         dirHigherTitle: "Valor Alt → Malalt",
@@ -413,13 +440,16 @@
         dirLowerSub: "Ex: Plaquetes, CD4",
         lblThreshold: "Llindar de decisió (Punt de tall):",
         lblThresholdHelp: "Mou el valor per equilibrar sensibilitat i especificitat.",
+        lblThresholdContext: "<strong>Qui el fixa?</strong> El defineixen societats clíniques segons si es prioritza cribratge (alta sensibilitat) o confirmació (alta especificitat).",
         btnOptimizeYouden: "Òptim Youden (J)",
         lblPopHealthy: "Població SENSE Malaltia",
-        tagControl: "Control",
+        tagControl: "Control (Sa)",
+        tooltipControl: "Controls sans utilitzats com a patró de referència negatiu.",
         lblMeanH: "Mitjana (μsa)",
         lblStdH: "Desviació (σsa)",
         lblPopDisease: "Població AMB Malaltia",
-        tagCases: "Casos",
+        tagCases: "Casos (Malalt)",
+        tooltipCases: "Casos confirmats diagnosticats mitjançant prova estàndard (gold standard).",
         lblMeanD: "Mitjana (μmalalt)",
         lblStdD: "Desviació (σmalalt)",
         lblPrevalence: "Prevalença Poblacional",
@@ -438,7 +468,8 @@
         curveHealthy: "Sense malaltia",
         curveDisease: "Amb malaltia",
         thresholdLegend: "Llindar: ",
-        axisXTitle: "Valor numèric de la prova diagnòstica (Biomarcador) →",
+        axisXTitle: "Resultat de la prova (Biomarcador) →",
+        axisYTitle: "Densitat de probabilitat / Població",
         rocFpr: "1-Esp",
         rocSens: "Sens"
       },
@@ -478,6 +509,8 @@
         lblVPNDesc: "Probabilidad de estar sano si el test es negativo",
         lblYouden: "Índice Youden (J)",
         lblYoudenDesc: "Sensibilidad + Especificidad - 1",
+        youdenBoxTitle: "¿Qué es el Índice de Youden (J)?",
+        youdenBoxText: "El Índice de Youden mide la eficacia global de un punto de corte. Varía entre 0 (prueba equivalente al azar) y 1 (prueba perfecta). Geométricamente en la curva ROC, el máximo Youden representa el punto con mayor distancia vertical respecto a la diagonal de azar, hallando el equilibrio óptimo cuando no se penaliza más un falso negativo que un falso positivo.",
         settingsTitle: "Configuración del Modelo",
         lblDirection: "Interpretación del resultado:",
         dirHigherTitle: "Valor Alto → Enfermo",
@@ -486,13 +519,16 @@
         dirLowerSub: "Ej: Plaquetas, CD4",
         lblThreshold: "Umbral de decisión (Punto de corte):",
         lblThresholdHelp: "Mueve el valor para equilibrar sensibilidad y especificidad.",
+        lblThresholdContext: "<strong>¿Quién lo fija?</strong> Lo definen comités clínicos según si se prioriza cribado (alta sensibilidad) o confirmación (alta especificidad).",
         btnOptimizeYouden: "Óptimo Youden (J)",
         lblPopHealthy: "Población SIN Enfermedad",
-        tagControl: "Control",
+        tagControl: "Control (Sano)",
+        tooltipControl: "Controles sanos usados como patrón de referencia negativo.",
         lblMeanH: "Media (μsano)",
         lblStdH: "Desviación (σsano)",
         lblPopDisease: "Población CON Enfermedad",
-        tagCases: "Casos",
+        tagCases: "Casos (Enfermo)",
+        tooltipCases: "Casos confirmados diagnosticados mediante patrón de referencia (gold standard).",
         lblMeanD: "Media (μenfermo)",
         lblStdD: "Desviación (σenfermo)",
         lblPrevalence: "Prevalencia Poblacional",
@@ -511,7 +547,8 @@
         curveHealthy: "Sin enfermedad",
         curveDisease: "Con enfermedad",
         thresholdLegend: "Umbral: ",
-        axisXTitle: "Valor numérico de la prueba diagnóstica (Biomarcador) →",
+        axisXTitle: "Resultado de la prueba (Biomarcador) →",
+        axisYTitle: "Densidad de probabilidad / Población",
         rocFpr: "1-Esp",
         rocSens: "Sens"
       },
@@ -551,6 +588,8 @@
         lblVPNDesc: "Probability of being healthy given a negative test",
         lblYouden: "Youden's Index (J)",
         lblYoudenDesc: "Sensitivity + Specificity - 1",
+        youdenBoxTitle: "What is Youden's Index (J)?",
+        youdenBoxText: "Youden's Index measures overall test operating efficacy. It ranges from 0 (useless chance test) to 1 (perfect test). Geometrically on the ROC curve, maximal Youden corresponds to the operating point with maximum vertical distance from the diagonal chance line, finding the optimal balance when false negatives and false positives carry equal weight.",
         settingsTitle: "Model Configuration",
         lblDirection: "Result interpretation:",
         dirHigherTitle: "High Value → Diseased",
@@ -559,13 +598,16 @@
         dirLowerSub: "e.g., Platelets, CD4",
         lblThreshold: "Decision Threshold (Cutoff):",
         lblThresholdHelp: "Move this slider to balance sensitivity against specificity.",
+        lblThresholdContext: "<strong>Who defines it?</strong> Clinical committees establish thresholds depending on whether screening (high sensitivity) or confirmation (high specificity) is prioritized.",
         btnOptimizeYouden: "Optimal Youden (J)",
         lblPopHealthy: "Population WITHOUT Disease",
-        tagControl: "Control",
+        tagControl: "Control (Healthy)",
+        tooltipControl: "Healthy controls used as the baseline non-diseased benchmark.",
         lblMeanH: "Mean (μhealthy)",
         lblStdH: "Std Dev (σhealthy)",
         lblPopDisease: "Population WITH Disease",
-        tagCases: "Cases",
+        tagCases: "Cases (Diseased)",
+        tooltipCases: "Confirmed cases diagnosed via a gold-standard benchmark.",
         lblMeanD: "Mean (μdiseased)",
         lblStdD: "Std Dev (σdiseased)",
         lblPrevalence: "Population Prevalence",
@@ -585,6 +627,7 @@
         curveDisease: "Diseased",
         thresholdLegend: "Cutoff: ",
         axisXTitle: "Diagnostic test numerical result (Biomarker) →",
+        axisYTitle: "Probability density / Population",
         rocFpr: "1-Spec",
         rocSens: "Sens"
       }
@@ -709,6 +752,9 @@
       document.getElementById('lblYouden').textContent = dict.lblYouden;
       document.getElementById('lblYoudenDesc').textContent = dict.lblYoudenDesc;
 
+      document.getElementById('youdenBoxTitle').textContent = dict.youdenBoxTitle;
+      document.getElementById('youdenBoxText').innerHTML = dict.youdenBoxText;
+
       document.getElementById('settingsTitle').textContent = dict.settingsTitle;
       document.getElementById('lblDirection').textContent = dict.lblDirection;
       document.getElementById('dirHigherTitle').innerHTML = dict.dirHigherTitle;
@@ -718,14 +764,17 @@
 
       document.getElementById('lblThreshold').textContent = dict.lblThreshold;
       document.getElementById('lblThresholdHelp').textContent = dict.lblThresholdHelp;
+      document.getElementById('lblThresholdContext').innerHTML = dict.lblThresholdContext;
       btnOptimizeYouden.textContent = dict.btnOptimizeYouden;
 
       document.getElementById('lblPopHealthy').textContent = dict.lblPopHealthy;
       document.getElementById('tagControl').textContent = dict.tagControl;
+      document.getElementById('tooltipControl').textContent = dict.tooltipControl;
       document.getElementById('lblMeanH').innerHTML = dict.lblMeanH;
       document.getElementById('lblStdH').innerHTML = dict.lblStdH;
       document.getElementById('lblPopDisease').textContent = dict.lblPopDisease;
       document.getElementById('tagCases').textContent = dict.tagCases;
+      document.getElementById('tooltipCases').textContent = dict.tooltipCases;
       document.getElementById('lblMeanD').innerHTML = dict.lblMeanD;
       document.getElementById('lblStdD').innerHTML = dict.lblStdD;
       document.getElementById('lblPrevalence').textContent = dict.lblPrevalence;
@@ -851,12 +900,12 @@
 
     const domainX = { min: 0, max: 100 };
 
-    function valToPx(val, width, padding = 45) {
+    function valToPx(val, width, padding = 55) {
       const plotWidth = width - padding * 2;
       return padding + ((val - domainX.min) / (domainX.max - domainX.min)) * plotWidth;
     }
 
-    function pxToVal(px, width, padding = 45) {
+    function pxToVal(px, width, padding = 55) {
       const plotWidth = width - padding * 2;
       const clampedPx = Math.max(padding, Math.min(width - padding, px));
       return domainX.min + ((clampedPx - padding) / plotWidth) * (domainX.max - domainX.min);
@@ -864,7 +913,7 @@
 
     function drawDensityCurves(metrics) {
       const { width, height } = setCanvasResolution(densityCanvas);
-      const padX = 45;
+      const padX = 55; // room for Y-axis numbers & title
       const padY = 40;
       const plotHeight = height - padY * 2;
       const dict = i18n[state.lang];
@@ -873,13 +922,47 @@
 
       const maxPdfH = normPdf(state.meanHealthy, state.meanHealthy, state.stdHealthy);
       const maxPdfD = normPdf(state.meanDisease, state.meanDisease, state.stdDisease);
-      const maxPdf = Math.max(maxPdfH, maxPdfD) * 1.15;
+      const maxPdf = Math.max(maxPdfH, maxPdfD) * 1.18;
 
       const yBaseline = height - padY;
       const yToPx = (pdfVal) => yBaseline - (pdfVal / maxPdf) * plotHeight;
 
+      // Vertical Y-Axis (Density)
+      dCtx.strokeStyle = '#475569';
+      dCtx.lineWidth = 1.5;
+      dCtx.beginPath();
+      dCtx.moveTo(padX, padY - 10);
+      dCtx.lineTo(padX, yBaseline);
+      dCtx.stroke();
+
+      // Y-Axis Ticks & Labels
+      dCtx.fillStyle = '#94a3b8';
+      dCtx.font = '9px Inter, sans-serif';
+      dCtx.textAlign = 'right';
+      dCtx.textBaseline = 'middle';
+      const ySteps = 4;
+      for (let i = 1; i <= ySteps; i++) {
+        const val = (maxPdf * i) / ySteps;
+        const yPx = yToPx(val);
+        dCtx.beginPath();
+        dCtx.moveTo(padX - 4, yPx);
+        dCtx.lineTo(padX, yPx);
+        dCtx.stroke();
+        dCtx.fillText(val.toFixed(2), padX - 6, yPx);
+      }
+
+      // Rotated Y-axis title
+      dCtx.save();
+      dCtx.translate(14, padY + plotHeight / 2);
+      dCtx.rotate(-Math.PI / 2);
+      dCtx.fillStyle = '#94a3b8';
+      dCtx.font = '10px Inter, sans-serif';
+      dCtx.textAlign = 'center';
+      dCtx.fillText(dict.axisYTitle, 0, 0);
+      dCtx.restore();
+
       // Grid lines
-      dCtx.strokeStyle = '#334155';
+      dCtx.strokeStyle = '#1e293b';
       dCtx.lineWidth = 1;
       dCtx.setLineDash([4, 4]);
       for (let v = 20; v <= 80; v += 20) {
@@ -912,7 +995,7 @@
         dCtx.lineTo(px2, yBaseline);
         dCtx.closePath();
 
-        dCtx.fillStyle = isPositiveTest ? 'rgba(244, 63, 94, 0.45)' : 'rgba(20, 184, 166, 0.35)';
+        dCtx.fillStyle = isPositiveTest ? 'rgba(244, 63, 94, 0.40)' : 'rgba(20, 184, 166, 0.35)';
         dCtx.fill();
       }
 
@@ -934,7 +1017,7 @@
         dCtx.lineTo(px2, yBaseline);
         dCtx.closePath();
 
-        dCtx.fillStyle = isPositiveTest ? 'rgba(245, 158, 11, 0.35)' : 'rgba(99, 102, 241, 0.45)';
+        dCtx.fillStyle = isPositiveTest ? 'rgba(245, 158, 11, 0.35)' : 'rgba(99, 102, 241, 0.40)';
         dCtx.fill();
       }
 
@@ -962,18 +1045,31 @@
       }
       dCtx.stroke();
 
-      // Peak Labels
-      const hPeakX = valToPx(state.meanHealthy, width, padX);
-      const hPeakY = yToPx(maxPdfH) - 10;
+      // NON-OVERLAPPING PEAK LABELS
+      let hPeakX = valToPx(state.meanHealthy, width, padX);
+      let dPeakX = valToPx(state.meanDisease, width, padX);
+      let hPeakY = yToPx(maxPdfH) - 12;
+      let dPeakY = yToPx(maxPdfD) - 12;
+
+      // If peaks are too close horizontally (within 85px), stagger them vertically
+      if (Math.abs(hPeakX - dPeakX) < 85) {
+        if (state.meanHealthy < state.meanDisease) {
+          hPeakY -= 14;
+          dPeakY += 10;
+        } else {
+          hPeakY += 10;
+          dPeakY -= 14;
+        }
+      }
+
       dCtx.fillStyle = '#2dd4bf';
       dCtx.font = 'bold 12px Inter, sans-serif';
       dCtx.textAlign = 'center';
-      dCtx.fillText(dict.curveHealthy, hPeakX, Math.max(padY + 14, hPeakY));
+      dCtx.textBaseline = 'middle';
+      dCtx.fillText(dict.curveHealthy, hPeakX, Math.max(padY + 12, hPeakY));
 
-      const dPeakX = valToPx(state.meanDisease, width, padX);
-      const dPeakY = yToPx(maxPdfD) - 10;
       dCtx.fillStyle = '#fbbf24';
-      dCtx.fillText(dict.curveDisease, dPeakX, Math.max(padY + 14, dPeakY));
+      dCtx.fillText(dict.curveDisease, dPeakX, Math.max(padY + 12, dPeakY));
 
       // Draggable Cutoff Line
       const cutPx = valToPx(state.threshold, width, padX);
@@ -981,7 +1077,7 @@
       dCtx.lineWidth = 2.5;
       dCtx.setLineDash([6, 4]);
       dCtx.beginPath();
-      dCtx.moveTo(cutPx, padY - 10);
+      dCtx.moveTo(cutPx, padY - 8);
       dCtx.lineTo(cutPx, yBaseline);
       dCtx.stroke();
       dCtx.setLineDash([]);
@@ -989,37 +1085,37 @@
       // Top drag handle
       dCtx.fillStyle = '#3b82f6';
       dCtx.beginPath();
-      dCtx.arc(cutPx, padY - 10, 7, 0, Math.PI * 2);
+      dCtx.arc(cutPx, padY - 8, 7, 0, Math.PI * 2);
       dCtx.fill();
       dCtx.strokeStyle = '#ffffff';
       dCtx.lineWidth = 2;
       dCtx.stroke();
 
-      // Cutoff label
+      // Cutoff label positioned cleanly above handle
       dCtx.fillStyle = '#ffffff';
       dCtx.font = 'bold 11px Inter, sans-serif';
       dCtx.textAlign = 'center';
-      dCtx.fillText(dict.thresholdLegend + state.threshold.toFixed(1), cutPx, padY - 22);
+      dCtx.textBaseline = 'bottom';
+      dCtx.fillText(dict.thresholdLegend + state.threshold.toFixed(1), cutPx, padY - 18);
 
-      // IN-CHART BADGES: ESPECIFICITAT & SENSIBILITAT (Exacte com a la imatge de referència)
+      // IN-CHART BADGES: ESPECIFICITAT & SENSIBILITAT WITH COLLISION AVOIDANCE
       const specBoxText = `${dict.lblSpecTitle}: ${(metrics.spec * 100).toFixed(1)}%`;
       const sensBoxText = `${dict.lblSensTitle}: ${(metrics.sens * 100).toFixed(1)}%`;
 
       function drawBadge(text, cx, cy, bgColor, textColor, borderColor) {
         dCtx.font = 'bold 12px Inter, sans-serif';
         const txtWidth = dCtx.measureText(text).width;
-        const boxW = txtWidth + 20;
-        const boxH = 26;
+        const boxW = txtWidth + 18;
+        const boxH = 24;
         const x = cx - boxW / 2;
         const y = cy - boxH / 2;
 
-        // Rounded rect
         dCtx.save();
         dCtx.fillStyle = bgColor;
         dCtx.strokeStyle = borderColor;
         dCtx.lineWidth = 1.5;
         dCtx.beginPath();
-        dCtx.roundRect(x, y, boxW, boxH, 8);
+        dCtx.roundRect(x, y, boxW, boxH, 6);
         dCtx.fill();
         dCtx.stroke();
 
@@ -1028,38 +1124,53 @@
         dCtx.textBaseline = 'middle';
         dCtx.fillText(text, cx, cy);
         dCtx.restore();
+        return { x, y, boxW, boxH };
       }
 
-      // Calculate anchor positions for badges inside curves
-      const badgeY = yBaseline - plotHeight * 0.22;
-      const healthyBadgeX = valToPx(state.meanHealthy, width, padX);
-      const diseasedBadgeX = valToPx(state.meanDisease, width, padX);
+      // Calculate anchor positions for badges with vertical separation if needed
+      let badgeHealthyY = yBaseline - plotHeight * 0.22;
+      let badgeDiseasedY = yBaseline - plotHeight * 0.22;
 
-      // Draw Specificity badge (Teal theme)
-      drawBadge(specBoxText, healthyBadgeX, badgeY, 'rgba(15, 23, 42, 0.85)', '#2dd4bf', '#0d9488');
-      
-      // Draw Sensitivity badge (Amber theme)
-      drawBadge(sensBoxText, diseasedBadgeX, badgeY, 'rgba(15, 23, 42, 0.85)', '#fbbf24', '#d97706');
+      let healthyBadgeX = valToPx(state.meanHealthy, width, padX);
+      let diseasedBadgeX = valToPx(state.meanDisease, width, padX);
 
-      // Region Annotations (VN, FP, FN, VP indicators directly on canvas)
-      dCtx.font = 'bold 13px Inter, sans-serif';
+      // If means are close, offset one higher and one lower to prevent overlap
+      if (Math.abs(healthyBadgeX - diseasedBadgeX) < 140) {
+        badgeHealthyY -= 20;
+        badgeDiseasedY += 18;
+      }
+
+      // Avoid cutoff line collision
+      if (Math.abs(healthyBadgeX - cutPx) < 45) {
+        healthyBadgeX += (healthyBadgeX < cutPx ? -25 : 25);
+      }
+      if (Math.abs(diseasedBadgeX - cutPx) < 45) {
+        diseasedBadgeX += (diseasedBadgeX < cutPx ? -25 : 25);
+      }
+
+      drawBadge(specBoxText, healthyBadgeX, badgeHealthyY, 'rgba(15, 23, 42, 0.90)', '#2dd4bf', '#0d9488');
+      drawBadge(sensBoxText, diseasedBadgeX, badgeDiseasedY, 'rgba(15, 23, 42, 0.90)', '#fbbf24', '#d97706');
+
+      // VN and VP Annotations positioned to prevent overlapping with boxes
+      dCtx.font = 'bold 12px Inter, sans-serif';
+      dCtx.textBaseline = 'middle';
       
-      // VN position: under healthy curve on its true negative side
       const vnValPos = state.higherIsDisease 
-        ? Math.min(state.meanHealthy, (domainX.min + cutX) / 2) 
-        : Math.max(state.meanHealthy, (cutX + domainX.max) / 2);
+        ? Math.min(state.meanHealthy - 4, (domainX.min + cutX) / 2) 
+        : Math.max(state.meanHealthy + 4, (cutX + domainX.max) / 2);
+      const vnPx = valToPx(Math.max(10, Math.min(90, vnValPos)), width, padX);
       dCtx.fillStyle = '#5eead4';
-      dCtx.fillText('VN', valToPx(vnValPos, width, padX), yBaseline - plotHeight * 0.45);
+      dCtx.fillText('VN', vnPx, yBaseline - plotHeight * 0.52);
 
-      // VP position: under diseased curve on its true positive side
       const vpValPos = state.higherIsDisease 
-        ? Math.max(state.meanDisease, (cutX + domainX.max) / 2)
-        : Math.min(state.meanDisease, (domainX.min + cutX) / 2);
+        ? Math.max(state.meanDisease + 4, (cutX + domainX.max) / 2)
+        : Math.min(state.meanDisease - 4, (domainX.min + cutX) / 2);
+      const vpPx = valToPx(Math.max(10, Math.min(90, vpValPos)), width, padX);
       dCtx.fillStyle = '#fde68a';
-      dCtx.fillText('VP', valToPx(vpValPos, width, padX), yBaseline - plotHeight * 0.45);
+      dCtx.fillText('VP', vpPx, yBaseline - plotHeight * 0.52);
 
-      // Axis Line & Ticks
-      dCtx.strokeStyle = '#64748b';
+      // Axis Line & Ticks (X-Axis)
+      dCtx.strokeStyle = '#475569';
       dCtx.lineWidth = 1.5;
       dCtx.beginPath();
       dCtx.moveTo(padX, yBaseline);
@@ -1331,7 +1442,7 @@
     function handlePointerThreshold(clientX) {
       const rect = densityCanvas.getBoundingClientRect();
       const clickX = clientX - rect.left;
-      const newVal = pxToVal(clickX, rect.width, 45);
+      const newVal = pxToVal(clickX, rect.width, 55);
       state.threshold = Math.max(10, Math.min(90, Math.round(newVal * 2) / 2));
       render();
     }
