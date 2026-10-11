@@ -2,8 +2,7 @@
 
 <p align="center">
   <a href="README.md">English</a> · 
-  <b><a href="README.ca.md">Català</a></b> · 
-  <a href="README.es.md">Español</a>
+  <b><a href="README.ca.md">Català</a></b>
 </p>
 
 <p align="center">
