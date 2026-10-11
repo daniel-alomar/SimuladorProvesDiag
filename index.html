@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Proves Diagnòstiques | Diagnostic Test Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    input[type=range] {
+      accent-color: #2563eb;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-600 text-white font-bold text-sm shadow-sm">Rx</span>
+          <h1 id="appTitle" class="text-xl font-extrabold text-slate-900 tracking-tight">Simulador de Proves Diagnòstiques</h1>
+        </div>
+        <p id="appSubtitle" class="text-xs text-slate-500 mt-0.5">Explora el llindar de tall, la distribució de marcadors, sensibilitat, especificitat i ROC</p>
+      </div>
+      
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Language Switcher -->
+        <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+          <button data-lang="ca" class="lang-btn px-2.5 py-1 rounded-md transition-all bg-white text-blue-600 shadow-sm">CA</button>
+          <button data-lang="es" class="lang-btn px-2.5 py-1 rounded-md transition-all text-slate-600 hover:text-slate-900">ES</button>
+          <button data-lang="en" class="lang-btn px-2.5 py-1 rounded-md transition-all text-slate-600 hover:text-slate-900">EN</button>
+        </div>
+
+        <!-- Presets Selector -->
+        <div class="flex items-center gap-2">
+          <label id="lblPresets" for="presetSelect" class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Casos típics:</label>
+          <select id="presetSelect" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-medium px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+            <option value="troponin">1. Marcadors elevats (ex: Troponina en infart)</option>
+            <option value="platelets">2. Marcadors disminuïts (ex: Plaquetes / Anèmia)</option>
+            <option value="highSeparation">3. Test excel·lent (poca superposició)</option>
+            <option value="highOverlap">4. Test deficient (gran solapament)</option>
+            <option value="unequalVariance">5. Dispersió desigual (&sigma; malalts &gt; &sigma; sans)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: Charts & Interactive Canvas (8 cols) -->
+    <div class="lg:col-span-8 flex flex-col gap-6">
+      
+      <!-- Density Curves Card -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+          <div>
+            <h2 id="chartTitle" class="font-bold text-slate-900 text-base">Distribucions de Densitat i Llindar de Decisió</h2>
+            <p id="chartHelp" class="text-xs text-slate-500">Pots <strong class="text-slate-700">arrossegar la línia discontínua</strong> del llindar directament sobre el gràfic</p>
+          </div>
+          
+          <!-- Direction Badge Indicator -->
+          <div id="directionBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span id="directionTextLabel">Valors ALTS &rarr; Malaltia</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full aspect-[16/9] sm:aspect-[2/1] bg-slate-900 rounded-xl overflow-hidden shadow-inner border border-slate-800">
+          <canvas id="densityCanvas" class="w-full h-full cursor-ew-resize"></canvas>
+          <div id="canvasTooltip" class="absolute hidden pointer-events-none bg-slate-900/90 text-white text-xs px-2.5 py-1.5 rounded-md shadow-lg border border-slate-700 backdrop-blur-sm z-20"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-teal-50 border border-teal-200">
+            <span class="w-3.5 h-3.5 rounded bg-teal-500/80 shrink-0"></span>
+            <div>
+              <div id="lblVNTitle" class="font-bold text-teal-900">VN (Veritables -)</div>
+              <div id="lblVNSub" class="text-[11px] text-teal-700">Sans correctes</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-rose-50 border border-rose-200">
+            <span class="w-3.5 h-3.5 rounded bg-rose-500/80 shrink-0"></span>
+            <div>
+              <div id="lblFPTitle" class="font-bold text-rose-900">FP (Falsos +)</div>
+              <div id="lblFPSub" class="text-[11px] text-rose-700">Falses alarmes</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-indigo-50 border border-indigo-200">
+            <span class="w-3.5 h-3.5 rounded bg-indigo-500/80 shrink-0"></span>
+            <div>
+              <div id="lblFNTitle" class="font-bold text-indigo-900">FN (Falsos -)</div>
+              <div id="lblFNSub" class="text-[11px] text-indigo-700">Malalts no detectats</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg bg-amber-50 border border-amber-200">
+            <span class="w-3.5 h-3.5 rounded bg-amber-500/80 shrink-0"></span>
+            <div>
+              <div id="lblVPTitle" class="font-bold text-amber-900">VP (Veritables +)</div>
+              <div id="lblVPSub" class="text-[11px] text-amber-700">Malalts detectats</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Confusion Matrix Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 id="matrixTitle" class="font-bold text-slate-900 text-sm">Matriu de Confusió Teòrica</h3>
+            <span id="matrixCohort" class="text-xs text-slate-400">Població N = 1.000</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+            <!-- Header row -->
+            <div class="p-2 font-medium text-slate-400"></div>
+            <div id="colHeaderDiseased" class="p-2 font-bold text-amber-700 bg-amber-50/70 rounded-lg">Malalt Real</div>
+            <div id="colHeaderHealthy" class="p-2 font-bold text-teal-700 bg-teal-50/70 rounded-lg">Sa Real</div>
+
+            <!-- Row 1: Test Positiu -->
+            <div id="rowHeaderPositive" class="p-2 font-bold text-slate-700 bg-slate-100 rounded-lg flex items-center justify-center">Test +</div>
+            <div class="p-3 bg-amber-100/60 rounded-xl border border-amber-200 flex flex-col justify-center">
+              <span class="text-[11px] text-amber-800 font-semibold">VP</span>
+              <span id="matrixVP" class="text-lg font-black text-amber-900">0</span>
+              <span id="matrixVPPct" class="text-[10px] text-amber-700 font-medium">0%</span>
+            </div>
+            <div class="p-3 bg-rose-100/60 rounded-xl border border-rose-200 flex flex-col justify-center">
+              <span class="text-[11px] text-rose-800 font-semibold">FP</span>
+              <span id="matrixFP" class="text-lg font-black text-rose-900">0</span>
+              <span id="matrixFPPct" class="text-[10px] text-rose-700 font-medium">0%</span>
+            </div>
+
+            <!-- Row 2: Test Negatiu -->
+            <div id="rowHeaderNegative" class="p-2 font-bold text-slate-700 bg-slate-100 rounded-lg flex items-center justify-center">Test -</div>
+            <div class="p-3 bg-indigo-100/60 rounded-xl border border-indigo-200 flex flex-col justify-center">
+              <span class="text-[11px] text-indigo-800 font-semibold">FN</span>
+              <span id="matrixFN" class="text-lg font-black text-indigo-900">0</span>
+              <span id="matrixFNPct" class="text-[10px] text-indigo-700 font-medium">0%</span>
+            </div>
+            <div class="p-3 bg-teal-100/60 rounded-xl border border-teal-200 flex flex-col justify-center">
+              <span class="text-[11px] text-teal-800 font-semibold">VN</span>
+              <span id="matrixVN" class="text-lg font-black text-teal-900">0</span>
+              <span id="matrixVNPct" class="text-[10px] text-teal-700 font-medium">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clinical Predictive Values & ROC Curve mini -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 id="rocTitle" class="font-bold text-slate-900 text-sm">Corba ROC &amp; Valors Predictius</h3>
+              <span id="rocAucText" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">AUC: 0.95</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 items-center">
+              <!-- Mini ROC Canvas -->
+              <div class="w-full aspect-square bg-slate-900 rounded-xl relative overflow-hidden border border-slate-800 p-1">
+                <canvas id="rocCanvas" class="w-full h-full"></canvas>
+              </div>
+
+              <!-- Metrics List -->
+              <div class="flex flex-col gap-2.5 text-xs">
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                  <div class="flex justify-between text-slate-500">
+                    <span id="lblVPP">VPP (Precisió +)</span>
+                    <span id="vppVal" class="font-bold text-slate-900">--%</span>
+                  </div>
+                  <p id="lblVPPDesc" class="text-[10px] text-slate-400 mt-0.5">Probabilitat d'estar malalt si el test és positiu</p>
+                </div>
+
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                  <div class="flex justify-between text-slate-500">
+                    <span id="lblVPN">VPN</span>
+                    <span id="vpnVal" class="font-bold text-slate-900">--%</span>
+                  </div>
+                  <p id="lblVPNDesc" class="text-[10px] text-slate-400 mt-0.5">Probabilitat d'estar sa si el test és negatiu</p>
+                </div>
+
+                <div class="p-2 rounded-lg bg-slate-50 border border-slate-200">
+                  <div class="flex justify-between text-slate-500">
+                    <span id="lblYouden">Índex Youden (J)</span>
+                    <span id="youdenVal" class="font-bold text-slate-900">--</span>
+                  </div>
+                  <p id="lblYoudenDesc" class="text-[10px] text-slate-400 mt-0.5">Sensibilitat + Especificitat - 1</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Interactive Controls & Theory Note (4 cols) -->
+    <div class="lg:col-span-4 flex flex-col gap-6">
+
+      <!-- Master Controls Panel -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+        <h2 id="settingsTitle" class="font-bold text-slate-900 text-base border-b border-slate-100 pb-2">Configuració del Model</h2>
+
+        <!-- Direction Toggle -->
+        <div class="flex flex-col gap-1.5">
+          <label id="lblDirection" class="text-xs font-semibold text-slate-700">Interpretació del resultat:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btnDirHigher" class="py-2 px-3 text-xs font-medium rounded-xl border transition-all text-center focus:outline-none ring-2 ring-blue-600 bg-blue-50 text-blue-700 border-blue-300">
+              <span id="dirHigherTitle">Valor Alt &rarr; Malalt</span>
+              <span id="dirHigherSub" class="block text-[10px] opacity-75 font-normal">Ex: Troponina, PCR</span>
+            </button>
+            <button id="btnDirLower" class="py-2 px-3 text-xs font-medium rounded-xl border transition-all text-center focus:outline-none border-slate-200 hover:bg-slate-50 text-slate-600">
+              <span id="dirLowerTitle">Valor Baix &rarr; Malalt</span>
+              <span id="dirLowerSub" class="block text-[10px] opacity-75 font-normal">Ex: Plaquetes, CD4</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cutoff Slider (Threshold) -->
+        <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <label for="sliderThreshold" class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
+              <span id="lblThreshold">Llindar de decisió (Punt de tall):</span>
+            </label>
+            <span id="txtThreshold" class="text-sm font-black text-blue-700 font-mono">50.0</span>
+          </div>
+          <input id="sliderThreshold" type="range" min="10" max="90" step="0.5" value="50" class="w-full cursor-pointer h-2 bg-blue-200 rounded-lg">
+          <p id="lblThresholdHelp" class="text-[11px] text-blue-700/80">Mou aquest valor per canviar el balanç entre sensibilitat i especificitat.</p>
+        </div>
+
+        <!-- Population Healthy Params -->
+        <div class="p-3 bg-teal-50/50 border border-teal-200/80 rounded-xl flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span id="lblPopHealthy" class="text-xs font-bold text-teal-900">Població SENSE Malaltia</span>
+            <span id="tagControl" class="text-[10px] font-semibold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">Control</span>
+          </div>
+          
+          <div>
+            <div class="flex justify-between text-xs text-teal-950 font-medium mb-1">
+              <span id="lblMeanH">Mitjana (&mu;<sub>sa</sub>)</span>
+              <span id="txtMeanHealthy" class="font-mono font-bold">38.0</span>
+            </div>
+            <input id="sliderMeanHealthy" type="range" min="15" max="85" step="0.5" value="38" class="w-full cursor-pointer h-1.5 bg-teal-200 rounded-lg">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs text-teal-950 font-medium mb-1">
+              <span id="lblStdH">Desviació (&sigma;<sub>sa</sub>)</span>
+              <span id="txtStdHealthy" class="font-mono font-bold">8.0</span>
+            </div>
+            <input id="sliderStdHealthy" type="range" min="3" max="18" step="0.5" value="8" class="w-full cursor-pointer h-1.5 bg-teal-200 rounded-lg">
+          </div>
+        </div>
+
+        <!-- Population Diseased Params -->
+        <div class="p-3 bg-amber-50/50 border border-amber-200/80 rounded-xl flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span id="lblPopDisease" class="text-xs font-bold text-amber-900">Població AMB Malaltia</span>
+            <span id="tagCases" class="text-[10px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Casos</span>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs text-amber-950 font-medium mb-1">
+              <span id="lblMeanD">Mitjana (&mu;<sub>malalt</sub>)</span>
+              <span id="txtMeanDisease" class="font-mono font-bold">62.0</span>
+            </div>
+            <input id="sliderMeanDisease" type="range" min="15" max="85" step="0.5" value="62" class="w-full cursor-pointer h-1.5 bg-amber-200 rounded-lg">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs text-amber-950 font-medium mb-1">
+              <span id="lblStdD">Desviació (&sigma;<sub>malalt</sub>)</span>
+              <span id="txtStdDisease" class="font-mono font-bold">8.0</span>
+            </div>
+            <input id="sliderStdDisease" type="range" min="3" max="18" step="0.5" value="8" class="w-full cursor-pointer h-1.5 bg-amber-200 rounded-lg">
+          </div>
+        </div>
+
+        <!-- Prevalence Slider -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between text-xs font-semibold text-slate-700">
+            <span id="lblPrevalence">Prevalença Poblacional</span>
+            <span id="txtPrevalence" class="font-mono text-blue-600 font-bold">15.0%</span>
+          </div>
+          <input id="sliderPrevalence" type="range" min="1" max="80" step="1" value="15" class="w-full cursor-pointer h-1.5 bg-slate-200 rounded-lg">
+          <p id="lblPrevalenceHelp" class="text-[11px] text-slate-400">Afecta directament el VPP i el VPN, però no la Sensibilitat o Especificitat.</p>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="btnReset" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition">
+          Restablir valors per defecte
+        </button>
+      </div>
+
+      <!-- Quick Metrics Summary Card -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col gap-3">
+        <h3 id="lblIntrinsicTitle" class="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-400">Rendiment Intrínsec</h3>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
+            <span id="lblSensTitle" class="text-[11px] font-semibold text-amber-800 block">Sensibilitat</span>
+            <span id="statSensitivity" class="text-xl font-black text-amber-950">91.9%</span>
+          </div>
+          <div class="p-3 bg-teal-50 rounded-xl border border-teal-200 text-center">
+            <span id="lblSpecTitle" class="text-[11px] font-semibold text-teal-800 block">Especificitat</span>
+            <span id="statSpecificity" class="text-xl font-black text-teal-950">91.9%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Educational Theory Drawer / Footer Section -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h3 id="theoryHeading" class="text-sm font-bold text-slate-900 mb-2">Conceptes clau a tenir en compte:</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 leading-relaxed">
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+          <strong id="card1Title" class="text-slate-900 block mb-1">1. Posició relativa de les corbes:</strong>
+          <span id="card1Text">La corba sana no està sempre a l'esquerra. Si una malaltia cursa amb deficiència d'un marcador (ex: plaquetes baixes, hemoglobina baixa), la corba patològica se situa a l'esquerra i el test és positiu per sota del llindar.</span>
+        </div>
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+          <strong id="card2Title" class="text-slate-900 block mb-1">2. Dispersió desigual (&sigma;):</strong>
+          <span id="card2Text">En moltes patologies, els malalts presenten una dispersió més alta que els sans (major variabilitat biològica). Això fa que les cues de la corba es comportin de manera asimètrica.</span>
+        </div>
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+          <strong id="card3Title" class="text-slate-900 block mb-1">3. El paper de la prevalença:</strong>
+          <span id="card3Text">La sensibilitat i especificitat són propietats tècniques del test. En canvi, el Valor Predictiu Positiu (VPP) depèn dràsticament de la prevalença: en malalties rares, fins i tot un test molt específic tindrà molts falsos positius en termes absoluts.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // State of the model
+    const state = {
+      lang: localStorage.getItem('diag_lang') || 'ca',
+      meanHealthy: 38.0,
+      stdHealthy: 8.0,
+      meanDisease: 62.0,
+      stdDisease: 8.0,
+      threshold: 50.0,
+      higherIsDisease: true, // true: X >= cutoff is positive; false: X <= cutoff is positive
+      prevalence: 0.15,      // 15%
+      isDraggingThreshold: false
+    };
+
+    // Complete multilingual dictionary
+    const i18n = {
+      ca: {
+        appTitle: "Simulador de Proves Diagnòstiques",
+        appSubtitle: "Explora el llindar de tall, la distribució de marcadors, sensibilitat, especificitat i ROC",
+        lblPresets: "Casos típics:",
+        presets: [
+          { val: "troponin", text: "1. Marcadors elevats (ex: Troponina en infart)" },
+          { val: "platelets", text: "2. Marcadors disminuïts (ex: Plaquetes / Anèmia)" },
+          { val: "highSeparation", text: "3. Test excel·lent (poca superposició)" },
+          { val: "highOverlap", text: "4. Test deficient (gran solapament)" },
+          { val: "unequalVariance", text: "5. Dispersió desigual (σ malalts > σ sans)" }
+        ],
+        chartTitle: "Distribucions de Densitat i Llindar de Decisió",
+        chartHelp: "Pots arrossegar la línia discontínua del llindar directament sobre el gràfic",
+        dirHigherBadge: "Valors ALTS → Malaltia",
+        dirLowerBadge: "Valors BAIXOS → Malaltia",
+        lblVNTitle: "VN (Veritables -)",
+        lblVNSub: "Sans correctes",
+        lblFPTitle: "FP (Falsos +)",
+        lblFPSub: "Falses alarmes",
+        lblFNTitle: "FN (Falsos -)",
+        lblFNSub: "Malalts no detectats",
+        lblVPTitle: "VP (Veritables +)",
+        lblVPSub: "Malalts detectats",
+        matrixTitle: "Matriu de Confusió Teòrica",
+        matrixCohort: "Població N = 1.000",
+        colHeaderDiseased: "Malalt Real",
+        colHeaderHealthy: "Sa Real",
+        rowHeaderPositive: "Test +",
+        rowHeaderNegative: "Test -",
+        rocTitle: "Corba ROC & Valors Predictius",
+        lblVPP: "VPP (Precisió +)",
+        lblVPPDesc: "Probabilitat d'estar malalt si el test és positiu",
+        lblVPN: "VPN",
+        lblVPNDesc: "Probabilitat d'estar sa si el test és negatiu",
+        lblYouden: "Índex Youden (J)",
+        lblYoudenDesc: "Sensibilitat + Especificitat - 1",
+        settingsTitle: "Configuració del Model",
+        lblDirection: "Interpretació del resultat:",
+        dirHigherTitle: "Valor Alt → Malalt",
+        dirHigherSub: "Ex: Troponina, PCR",
+        dirLowerTitle: "Valor Baix → Malalt",
+        dirLowerSub: "Ex: Plaquetes, CD4",
+        lblThreshold: "Llindar de decisió (Punt de tall):",
+        lblThresholdHelp: "Mou aquest valor per canviar el balanç entre sensibilitat i especificitat.",
+        lblPopHealthy: "Població SENSE Malaltia",
+        tagControl: "Control",
+        lblMeanH: "Mitjana (μsa)",
+        lblStdH: "Desviació (σsa)",
+        lblPopDisease: "Població AMB Malaltia",
+        tagCases: "Casos",
+        lblMeanD: "Mitjana (μmalalt)",
+        lblStdD: "Desviació (σmalalt)",
+        lblPrevalence: "Prevalença Poblacional",
+        lblPrevalenceHelp: "Afecta directament el VPP i el VPN, però no la Sensibilitat o Especificitat.",
+        btnReset: "Restablir valors per defecte",
+        lblIntrinsicTitle: "Rendiment Intrínsec",
+        lblSensTitle: "Sensibilitat",
+        lblSpecTitle: "Especificitat",
+        theoryHeading: "Conceptes clau a tenir en compte:",
+        card1Title: "1. Posició relativa de les corbes:",
+        card1Text: "La corba sana no està sempre a l'esquerra. Si una malaltia cursa amb deficiència d'un marcador (ex: plaquetes baixes, hemoglobina baixa), la corba patològica se situa a l'esquerra i el test és positiu per sota del llindar.",
+        card2Title: "2. Dispersió desigual (σ):",
+        card2Text: "En moltes patologies, els malalts presenten una dispersió més alta que els sans (major variabilitat biològica). Això fa que les cues de la corba es comportin de manera asimètrica.",
+        card3Title: "3. El paper de la prevalença:",
+        card3Text: "La sensibilitat i especificitat són propietats tècniques del test. En canvi, el Valor Predictiu Positiu (VPP) depèn dràsticament de la prevalença: en malalties rares, fins i tot un test molt específic tindrà molts falsos positius en termes absoluts.",
+        curveHealthy: "Sense malaltia",
+        curveDisease: "Amb malaltia",
+        thresholdLegend: "Llindar: ",
+        axisXTitle: "Valor numèric de la prova diagnòstica (Biomarcador) →",
+        rocFpr: "1-Esp",
+        rocSens: "Sens"
+      },
+      es: {
+        appTitle: "Simulador de Pruebas Diagnósticas",
+        appSubtitle: "Explora el umbral de decisión, distribución de marcadores, sensibilidad, especificidad y ROC",
+        lblPresets: "Casos típicos:",
+        presets: [
+          { val: "troponin", text: "1. Marcadores elevados (ej: Troponina en infarto)" },
+          { val: "platelets", text: "2. Marcadores disminuidos (ej: Plaquetas / Anemia)" },
+          { val: "highSeparation", text: "3. Test excelente (poca superposición)" },
+          { val: "highOverlap", text: "4. Test deficiente (gran solapamiento)" },
+          { val: "unequalVariance", text: "5. Dispersión desigual (σ enfermos > σ sanos)" }
+        ],
+        chartTitle: "Distribuciones de Densidad y Umbral de Decisión",
+        chartHelp: "Puedes arrastrar la línea discontinua del umbral directamente sobre el gráfico",
+        dirHigherBadge: "Valores ALTOS → Enfermedad",
+        dirLowerBadge: "Valores BAJOS → Enfermedad",
+        lblVNTitle: "VN (Verdaderos -)",
+        lblVNSub: "Sanos correctos",
+        lblFPTitle: "FP (Falsos +)",
+        lblFPSub: "Falsas alarmas",
+        lblFNTitle: "FN (Falsos -)",
+        lblFNSub: "Enfermos no detectados",
+        lblVPTitle: "VP (Verdaderos +)",
+        lblVPSub: "Enfermos detectados",
+        matrixTitle: "Matriz de Confusión Teórica",
+        matrixCohort: "Población N = 1.000",
+        colHeaderDiseased: "Enfermo Real",
+        colHeaderHealthy: "Sano Real",
+        rowHeaderPositive: "Test +",
+        rowHeaderNegative: "Test -",
+        rocTitle: "Curva ROC y Valores Predictivos",
+        lblVPP: "VPP (Precisión +)",
+        lblVPPDesc: "Probabilidad de estar enfermo si el test es positivo",
+        lblVPN: "VPN",
+        lblVPNDesc: "Probabilidad de estar sano si el test es negativo",
+        lblYouden: "Índice Youden (J)",
+        lblYoudenDesc: "Sensibilidad + Especificidad - 1",
+        settingsTitle: "Configuración del Modelo",
+        lblDirection: "Interpretación del resultado:",
+        dirHigherTitle: "Valor Alto → Enfermo",
+        dirHigherSub: "Ej: Troponina, PCR",
+        dirLowerTitle: "Valor Bajo → Enfermo",
+        dirLowerSub: "Ej: Plaquetas, CD4",
+        lblThreshold: "Umbral de decisión (Punto de corte):",
+        lblThresholdHelp: "Mueve este valor para balancear sensibilidad y especificidad.",
+        lblPopHealthy: "Población SIN Enfermedad",
+        tagControl: "Control",
+        lblMeanH: "Media (μsano)",
+        lblStdH: "Desviación (σsano)",
+        lblPopDisease: "Población CON Enfermedad",
+        tagCases: "Casos",
+        lblMeanD: "Media (μenfermo)",
+        lblStdD: "Desviación (σenfermo)",
+        lblPrevalence: "Prevalencia Poblacional",
+        lblPrevalenceHelp: "Afecta directamente al VPP y VPN, pero no a la Sensibilidad o Especificidad.",
+        btnReset: "Restablecer valores por defecto",
+        lblIntrinsicTitle: "Rendimiento Intrínseco",
+        lblSensTitle: "Sensibilidad",
+        lblSpecTitle: "Especificidad",
+        theoryHeading: "Conceptos clave a tener en cuenta:",
+        card1Title: "1. Posición relativa de las curvas:",
+        card1Text: "La curva sana no siempre está a la izquierda. Si una patología cursa con déficit de un biomarcador (ej: plaquetas bajas, anemia), la curva patológica se sitúa a la izquierda y el test es positivo por debajo del umbral.",
+        card2Title: "2. Dispersión desigual (σ):",
+        card2Text: "En muchas patologías, los enfermos presentan mayor dispersión que los sanos (mayor variabilidad biológica). Esto produce asimetrías importantes en las colas de la distribución.",
+        card3Title: "3. El papel de la prevalencia:",
+        card3Text: "La sensibilidad y especificidad son propiedades técnicas intrínsecas del test. Sin embargo, el Valor Predictivo Positivo (VPP) depende críticamente de la prevalencia: en enfermedades raras, un test muy específico puede dar muchos falsos positivos absolutos.",
+        curveHealthy: "Sin enfermedad",
+        curveDisease: "Con enfermedad",
+        thresholdLegend: "Umbral: ",
+        axisXTitle: "Valor numérico de la prueba diagnóstica (Biomarcador) →",
+        rocFpr: "1-Esp",
+        rocSens: "Sens"
+      },
+      en: {
+        appTitle: "Diagnostic Test Performance Simulator",
+        appSubtitle: "Explore decision cutoffs, biomarker distributions, sensitivity, specificity and ROC",
+        lblPresets: "Typical scenarios:",
+        presets: [
+          { val: "troponin", text: "1. Elevated markers (e.g., Troponin in infarction)" },
+          { val: "platelets", text: "2. Decreased markers (e.g., Platelets / Anemia)" },
+          { val: "highSeparation", text: "3. Excellent test (minimal overlap)" },
+          { val: "highOverlap", text: "4. Poor test (substantial overlap)" },
+          { val: "unequalVariance", text: "5. Unequal variance (σ diseased > σ healthy)" }
+        ],
+        chartTitle: "Density Distributions & Decision Threshold",
+        chartHelp: "You can drag the dashed cutoff line directly across the chart",
+        dirHigherBadge: "HIGH values → Disease",
+        dirLowerBadge: "LOW values → Disease",
+        lblVNTitle: "TN (True -)",
+        lblVNSub: "Healthy correct",
+        lblFPTitle: "FP (False +)",
+        lblFPSub: "False alarms",
+        lblFNTitle: "FN (False -)",
+        lblFNSub: "Missed disease",
+        lblVPTitle: "TP (True +)",
+        lblVPSub: "Detected disease",
+        matrixTitle: "Theoretical Confusion Matrix",
+        matrixCohort: "Cohort N = 1,000",
+        colHeaderDiseased: "Actual Diseased",
+        colHeaderHealthy: "Actual Healthy",
+        rowHeaderPositive: "Test +",
+        rowHeaderNegative: "Test -",
+        rocTitle: "ROC Curve & Predictive Values",
+        lblVPP: "PPV (Precision +)",
+        lblVPPDesc: "Probability of disease given a positive test",
+        lblVPN: "NPV",
+        lblVPNDesc: "Probability of being healthy given a negative test",
+        lblYouden: "Youden's Index (J)",
+        lblYoudenDesc: "Sensitivity + Specificity - 1",
+        settingsTitle: "Model Configuration",
+        lblDirection: "Result interpretation:",
+        dirHigherTitle: "High Value → Diseased",
+        dirHigherSub: "e.g., Troponin, CRP",
+        dirLowerTitle: "Low Value → Diseased",
+        dirLowerSub: "e.g., Platelets, CD4",
+        lblThreshold: "Decision Threshold (Cutoff):",
+        lblThresholdHelp: "Move this slider to balance sensitivity against specificity.",
+        lblPopHealthy: "Population WITHOUT Disease",
+        tagControl: "Control",
+        lblMeanH: "Mean (μhealthy)",
+        lblStdH: "Std Dev (σhealthy)",
+        lblPopDisease: "Population WITH Disease",
+        tagCases: "Cases",
+        lblMeanD: "Mean (μdiseased)",
+        lblStdD: "Std Dev (σdiseased)",
+        lblPrevalence: "Population Prevalence",
+        lblPrevalenceHelp: "Directly determines PPV and NPV without changing sensitivity or specificity.",
+        btnReset: "Reset default values",
+        lblIntrinsicTitle: "Intrinsic Performance",
+        lblSensTitle: "Sensitivity",
+        lblSpecTitle: "Specificity",
+        theoryHeading: "Key concepts to remember:",
+        card1Title: "1. Relative curve position:",
+        card1Text: "The healthy distribution is not always on the left. In conditions characterized by deficiency (e.g. low platelet count, low hemoglobin), the disease curve lies to the left and a positive test is triggered below the cutoff.",
+        card2Title: "2. Unequal dispersion (σ):",
+        card2Text: "In many clinical settings, diseased individuals exhibit greater biological variance (higher σ) than healthy controls. This creates asymmetric tail behavior.",
+        card3Title: "3. The role of prevalence:",
+        card3Text: "Sensitivity and specificity are intrinsic technical properties of the test. Conversely, Positive Predictive Value (PPV) heavily depends on population prevalence: in rare disorders, even highly specific tests generate many absolute false alarms.",
+        curveHealthy: "Non-diseased (Healthy)",
+        curveDisease: "Diseased",
+        thresholdLegend: "Cutoff: ",
+        axisXTitle: "Diagnostic test numerical result (Biomarker) →",
+        rocFpr: "1-Spec",
+        rocSens: "Sens"
+      }
+    };
+
+    function normPdf(x, mean, std) {
+      const z = (x - mean) / std;
+      return (1 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * z * z);
+    }
+
+    // Cumulative normal distribution approximation (Abramowitz and Stegun)
+    function normCdf(x, mean, std) {
+      const z = (x - mean) / std;
+      const t = 1.0 / (1.0 + 0.2316419 * Math.abs(z));
+      const d = 0.3989422804014337 * Math.exp(-0.5 * z * z);
+      const prob = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+      return z > 0 ? 1 - prob : prob;
+    }
+
+    // DOM Elements
+    const densityCanvas = document.getElementById('densityCanvas');
+    const dCtx = densityCanvas.getContext('2d');
+    const rocCanvas = document.getElementById('rocCanvas');
+    const rCtx = rocCanvas.getContext('2d');
+    const canvasTooltip = document.getElementById('canvasTooltip');
+
+    // Controls
+    const sliderThreshold = document.getElementById('sliderThreshold');
+    const txtThreshold = document.getElementById('txtThreshold');
+    const sliderMeanHealthy = document.getElementById('sliderMeanHealthy');
+    const txtMeanHealthy = document.getElementById('txtMeanHealthy');
+    const sliderStdHealthy = document.getElementById('sliderStdHealthy');
+    const txtStdHealthy = document.getElementById('txtStdHealthy');
+    const sliderMeanDisease = document.getElementById('sliderMeanDisease');
+    const txtMeanDisease = document.getElementById('txtMeanDisease');
+    const sliderStdDisease = document.getElementById('sliderStdDisease');
+    const txtStdDisease = document.getElementById('txtStdDisease');
+    const sliderPrevalence = document.getElementById('sliderPrevalence');
+    const txtPrevalence = document.getElementById('txtPrevalence');
+
+    const btnDirHigher = document.getElementById('btnDirHigher');
+    const btnDirLower = document.getElementById('btnDirLower');
+    const btnReset = document.getElementById('btnReset');
+    const presetSelect = document.getElementById('presetSelect');
+    const directionBadge = document.getElementById('directionBadge');
+    const directionTextLabel = document.getElementById('directionTextLabel');
+
+    // Outputs
+    const statSensitivity = document.getElementById('statSensitivity');
+    const statSpecificity = document.getElementById('statSpecificity');
+    const matrixVP = document.getElementById('matrixVP');
+    const matrixVPPct = document.getElementById('matrixVPPct');
+    const matrixFP = document.getElementById('matrixFP');
+    const matrixFPPct = document.getElementById('matrixFPPct');
+    const matrixFN = document.getElementById('matrixFN');
+    const matrixFNPct = document.getElementById('matrixFNPct');
+    const matrixVN = document.getElementById('matrixVN');
+    const matrixVNPct = document.getElementById('matrixVNPct');
+    const vppVal = document.getElementById('vppVal');
+    const vpnVal = document.getElementById('vpnVal');
+    const youdenVal = document.getElementById('youdenVal');
+    const rocAucText = document.getElementById('rocAucText');
+
+    function setLanguage(lang) {
+      if (!i18n[lang]) return;
+      state.lang = lang;
+      localStorage.setItem('diag_lang', lang);
+      document.documentElement.lang = lang;
+
+      // Update button styles
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        if (btn.getAttribute('data-lang') === lang) {
+          btn.className = 'lang-btn px-2.5 py-1 rounded-md transition-all bg-white text-blue-600 shadow-sm font-bold';
+        } else {
+          btn.className = 'lang-btn px-2.5 py-1 rounded-md transition-all text-slate-600 hover:text-slate-900';
+        }
+      });
+
+      const dict = i18n[lang];
+
+      // Update static text nodes
+      document.getElementById('appTitle').textContent = dict.appTitle;
+      document.getElementById('appSubtitle').textContent = dict.appSubtitle;
+      document.getElementById('lblPresets').textContent = dict.lblPresets;
+      
+      // Update presets options preserving selection
+      const currentPreset = presetSelect.value;
+      presetSelect.innerHTML = '';
+      dict.presets.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.val;
+        opt.textContent = p.text;
+        presetSelect.appendChild(opt);
+      });
+      presetSelect.value = currentPreset;
+
+      document.getElementById('chartTitle').textContent = dict.chartTitle;
+      document.getElementById('chartHelp').innerHTML = dict.chartHelp;
+      
+      document.getElementById('lblVNTitle').textContent = dict.lblVNTitle;
+      document.getElementById('lblVNSub').textContent = dict.lblVNSub;
+      document.getElementById('lblFPTitle').textContent = dict.lblFPTitle;
+      document.getElementById('lblFPSub').textContent = dict.lblFPSub;
+      document.getElementById('lblFNTitle').textContent = dict.lblFNTitle;
+      document.getElementById('lblFNSub').textContent = dict.lblFNSub;
+      document.getElementById('lblVPTitle').textContent = dict.lblVPTitle;
+      document.getElementById('lblVPSub').textContent = dict.lblVPSub;
+
+      document.getElementById('matrixTitle').textContent = dict.matrixTitle;
+      document.getElementById('matrixCohort').textContent = dict.matrixCohort;
+      document.getElementById('colHeaderDiseased').textContent = dict.colHeaderDiseased;
+      document.getElementById('colHeaderHealthy').textContent = dict.colHeaderHealthy;
+      document.getElementById('rowHeaderPositive').textContent = dict.rowHeaderPositive;
+      document.getElementById('rowHeaderNegative').textContent = dict.rowHeaderNegative;
+
+      document.getElementById('rocTitle').innerHTML = dict.rocTitle;
+      document.getElementById('lblVPP').textContent = dict.lblVPP;
+      document.getElementById('lblVPPDesc').textContent = dict.lblVPPDesc;
+      document.getElementById('lblVPN').textContent = dict.lblVPN;
+      document.getElementById('lblVPNDesc').textContent = dict.lblVPNDesc;
+      document.getElementById('lblYouden').textContent = dict.lblYouden;
+      document.getElementById('lblYoudenDesc').textContent = dict.lblYoudenDesc;
+
+      document.getElementById('settingsTitle').textContent = dict.settingsTitle;
+      document.getElementById('lblDirection').textContent = dict.lblDirection;
+      document.getElementById('dirHigherTitle').innerHTML = dict.dirHigherTitle;
+      document.getElementById('dirHigherSub').textContent = dict.dirHigherSub;
+      document.getElementById('dirLowerTitle').innerHTML = dict.dirLowerTitle;
+      document.getElementById('dirLowerSub').textContent = dict.dirLowerSub;
+
+      document.getElementById('lblThreshold').textContent = dict.lblThreshold;
+      document.getElementById('lblThresholdHelp').textContent = dict.lblThresholdHelp;
+      document.getElementById('lblPopHealthy').textContent = dict.lblPopHealthy;
+      document.getElementById('tagControl').textContent = dict.tagControl;
+      document.getElementById('lblMeanH').innerHTML = dict.lblMeanH;
+      document.getElementById('lblStdH').innerHTML = dict.lblStdH;
+      document.getElementById('lblPopDisease').textContent = dict.lblPopDisease;
+      document.getElementById('tagCases').textContent = dict.tagCases;
+      document.getElementById('lblMeanD').innerHTML = dict.lblMeanD;
+      document.getElementById('lblStdD').innerHTML = dict.lblStdD;
+      document.getElementById('lblPrevalence').textContent = dict.lblPrevalence;
+      document.getElementById('lblPrevalenceHelp').textContent = dict.lblPrevalenceHelp;
+      document.getElementById('btnReset').textContent = dict.btnReset;
+
+      document.getElementById('lblIntrinsicTitle').textContent = dict.lblIntrinsicTitle;
+      document.getElementById('lblSensTitle').textContent = dict.lblSensTitle;
+      document.getElementById('lblSpecTitle').textContent = dict.lblSpecTitle;
+
+      document.getElementById('theoryHeading').textContent = dict.theoryHeading;
+      document.getElementById('card1Title').textContent = dict.card1Title;
+      document.getElementById('card1Text').textContent = dict.card1Text;
+      document.getElementById('card2Title').textContent = dict.card2Title;
+      document.getElementById('card2Text').textContent = dict.card2Text;
+      document.getElementById('card3Title').textContent = dict.card3Title;
+      document.getElementById('card3Text').textContent = dict.card3Text;
+
+      render();
+    }
+
+    function calculateMetrics() {
+      const { meanHealthy, stdHealthy, meanDisease, stdDisease, threshold, higherIsDisease, prevalence } = state;
+
+      let sens, spec;
+      if (higherIsDisease) {
+        sens = 1 - normCdf(threshold, meanDisease, stdDisease);
+        spec = normCdf(threshold, meanHealthy, stdHealthy);
+      } else {
+        sens = normCdf(threshold, meanDisease, stdDisease);
+        spec = 1 - normCdf(threshold, meanHealthy, stdHealthy);
+      }
+
+      sens = Math.max(0, Math.min(1, sens));
+      spec = Math.max(0, Math.min(1, spec));
+
+      const fnRate = 1 - sens;
+      const fpRate = 1 - spec;
+
+      // Population counts for N = 1000
+      const totalPop = 1000;
+      const nDiseased = totalPop * prevalence;
+      const nHealthy = totalPop * (1 - prevalence);
+
+      const countVP = Math.round(nDiseased * sens);
+      const countFN = Math.round(nDiseased * fnRate);
+      const countVN = Math.round(nHealthy * spec);
+      const countFP = Math.round(nHealthy * fpRate);
+
+      const totalPosTest = countVP + countFP;
+      const totalNegTest = countVN + countFN;
+
+      const vpp = totalPosTest > 0 ? (countVP / totalPosTest) * 100 : 0;
+      const vpn = totalNegTest > 0 ? (countVN / totalNegTest) * 100 : 0;
+      const youden = sens + spec - 1;
+
+      // AUC calculation
+      const deltaMu = Math.abs(meanDisease - meanHealthy);
+      const pooledSigma = Math.sqrt(stdDisease * stdDisease + stdHealthy * stdHealthy);
+      const auc = normCdf(deltaMu, 0, pooledSigma);
+
+      return {
+        sens,
+        spec,
+        fnRate,
+        fpRate,
+        countVP,
+        countFN,
+        countVN,
+        countFP,
+        vpp,
+        vpn,
+        youden,
+        auc
+      };
+    }
+
+    function updateMetricsUI(metrics) {
+      statSensitivity.textContent = (metrics.sens * 100).toFixed(1) + '%';
+      statSpecificity.textContent = (metrics.spec * 100).toFixed(1) + '%';
+
+      matrixVP.textContent = metrics.countVP;
+      matrixVPPct.textContent = (metrics.sens * 100).toFixed(1) + '%';
+
+      matrixFN.textContent = metrics.countFN;
+      matrixFNPct.textContent = (metrics.fnRate * 100).toFixed(1) + '%';
+
+      matrixVN.textContent = metrics.countVN;
+      matrixVNPct.textContent = (metrics.spec * 100).toFixed(1) + '%';
+
+      matrixFP.textContent = metrics.countFP;
+      matrixFPPct.textContent = (metrics.fpRate * 100).toFixed(1) + '%';
+
+      vppVal.textContent = metrics.vpp.toFixed(1) + '%';
+      vpnVal.textContent = metrics.vpn.toFixed(1) + '%';
+      youdenVal.textContent = metrics.youden.toFixed(2);
+      rocAucText.textContent = 'AUC: ' + metrics.auc.toFixed(3);
+    }
+
+    function setCanvasResolution(canvas) {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.resetTransform?.();
+      ctx.scale(dpr, dpr);
+      return { width: rect.width, height: rect.height };
+    }
+
+    const domainX = { min: 0, max: 100 };
+
+    function valToPx(val, width, padding = 45) {
+      const plotWidth = width - padding * 2;
+      return padding + ((val - domainX.min) / (domainX.max - domainX.min)) * plotWidth;
+    }
+
+    function pxToVal(px, width, padding = 45) {
+      const plotWidth = width - padding * 2;
+      const clampedPx = Math.max(padding, Math.min(width - padding, px));
+      return domainX.min + ((clampedPx - padding) / plotWidth) * (domainX.max - domainX.min);
+    }
+
+    function drawDensityCurves() {
+      const { width, height } = setCanvasResolution(densityCanvas);
+      const padX = 45;
+      const padY = 40;
+      const plotHeight = height - padY * 2;
+      const dict = i18n[state.lang];
+
+      dCtx.clearRect(0, 0, width, height);
+
+      const maxPdfH = normPdf(state.meanHealthy, state.meanHealthy, state.stdHealthy);
+      const maxPdfD = normPdf(state.meanDisease, state.meanDisease, state.stdDisease);
+      const maxPdf = Math.max(maxPdfH, maxPdfD) * 1.15;
+
+      const yBaseline = height - padY;
+      const yToPx = (pdfVal) => yBaseline - (pdfVal / maxPdf) * plotHeight;
+
+      // Grid lines
+      dCtx.strokeStyle = '#334155';
+      dCtx.lineWidth = 1;
+      dCtx.setLineDash([4, 4]);
+      for (let v = 20; v <= 80; v += 20) {
+        const x = valToPx(v, width, padX);
+        dCtx.beginPath();
+        dCtx.moveTo(x, padY);
+        dCtx.lineTo(x, yBaseline);
+        dCtx.stroke();
+      }
+      dCtx.setLineDash([]);
+
+      const step = 0.5;
+      const cutX = state.threshold;
+
+      // 1. Shading Healthy curve (VN vs FP)
+      for (let x = domainX.min; x < domainX.max; x += step) {
+        const x1 = x;
+        const x2 = x + step;
+        const p1 = normPdf(x1, state.meanHealthy, state.stdHealthy);
+        const p2 = normPdf(x2, state.meanHealthy, state.stdHealthy);
+        const px1 = valToPx(x1, width, padX);
+        const px2 = valToPx(x2, width, padX);
+
+        const isPositiveTest = state.higherIsDisease ? ((x1 + x2) / 2 >= cutX) : ((x1 + x2) / 2 <= cutX);
+
+        dCtx.beginPath();
+        dCtx.moveTo(px1, yBaseline);
+        dCtx.lineTo(px1, yToPx(p1));
+        dCtx.lineTo(px2, yToPx(p2));
+        dCtx.lineTo(px2, yBaseline);
+        dCtx.closePath();
+
+        dCtx.fillStyle = isPositiveTest ? 'rgba(244, 63, 94, 0.45)' : 'rgba(20, 184, 166, 0.35)';
+        dCtx.fill();
+      }
+
+      // 2. Shading Disease curve (VP vs FN)
+      for (let x = domainX.min; x < domainX.max; x += step) {
+        const x1 = x;
+        const x2 = x + step;
+        const p1 = normPdf(x1, state.meanDisease, state.stdDisease);
+        const p2 = normPdf(x2, state.meanDisease, state.stdDisease);
+        const px1 = valToPx(x1, width, padX);
+        const px2 = valToPx(x2, width, padX);
+
+        const isPositiveTest = state.higherIsDisease ? ((x1 + x2) / 2 >= cutX) : ((x1 + x2) / 2 <= cutX);
+
+        dCtx.beginPath();
+        dCtx.moveTo(px1, yBaseline);
+        dCtx.lineTo(px1, yToPx(p1));
+        dCtx.lineTo(px2, yToPx(p2));
+        dCtx.lineTo(px2, yBaseline);
+        dCtx.closePath();
+
+        dCtx.fillStyle = isPositiveTest ? 'rgba(245, 158, 11, 0.35)' : 'rgba(99, 102, 241, 0.45)';
+        dCtx.fill();
+      }
+
+      // Outline Healthy Curve
+      dCtx.beginPath();
+      dCtx.lineWidth = 2.5;
+      dCtx.strokeStyle = '#0d9488';
+      for (let x = domainX.min; x <= domainX.max; x += step) {
+        const px = valToPx(x, width, padX);
+        const py = yToPx(normPdf(x, state.meanHealthy, state.stdHealthy));
+        if (x === domainX.min) dCtx.moveTo(px, py);
+        else dCtx.lineTo(px, py);
+      }
+      dCtx.stroke();
+
+      // Outline Disease Curve
+      dCtx.beginPath();
+      dCtx.lineWidth = 2.5;
+      dCtx.strokeStyle = '#d97706';
+      for (let x = domainX.min; x <= domainX.max; x += step) {
+        const px = valToPx(x, width, padX);
+        const py = yToPx(normPdf(x, state.meanDisease, state.stdDisease));
+        if (x === domainX.min) dCtx.moveTo(px, py);
+        else dCtx.lineTo(px, py);
+      }
+      dCtx.stroke();
+
+      // Peak Labels
+      const hPeakX = valToPx(state.meanHealthy, width, padX);
+      const hPeakY = yToPx(maxPdfH) - 10;
+      dCtx.fillStyle = '#2dd4bf';
+      dCtx.font = 'bold 12px Inter, sans-serif';
+      dCtx.textAlign = 'center';
+      dCtx.fillText(dict.curveHealthy, hPeakX, Math.max(padY + 14, hPeakY));
+
+      const dPeakX = valToPx(state.meanDisease, width, padX);
+      const dPeakY = yToPx(maxPdfD) - 10;
+      dCtx.fillStyle = '#fbbf24';
+      dCtx.fillText(dict.curveDisease, dPeakX, Math.max(padY + 14, dPeakY));
+
+      // Draggable Cutoff Line
+      const cutPx = valToPx(state.threshold, width, padX);
+      dCtx.strokeStyle = '#ffffff';
+      dCtx.lineWidth = 2.5;
+      dCtx.setLineDash([6, 4]);
+      dCtx.beginPath();
+      dCtx.moveTo(cutPx, padY - 10);
+      dCtx.lineTo(cutPx, yBaseline);
+      dCtx.stroke();
+      dCtx.setLineDash([]);
+
+      // Top drag handle
+      dCtx.fillStyle = '#3b82f6';
+      dCtx.beginPath();
+      dCtx.arc(cutPx, padY - 10, 7, 0, Math.PI * 2);
+      dCtx.fill();
+      dCtx.strokeStyle = '#ffffff';
+      dCtx.lineWidth = 2;
+      dCtx.stroke();
+
+      // Cutoff label
+      dCtx.fillStyle = '#ffffff';
+      dCtx.font = 'bold 11px Inter, sans-serif';
+      dCtx.textAlign = 'center';
+      dCtx.fillText(dict.thresholdLegend + state.threshold.toFixed(1), cutPx, padY - 22);
+
+      // Axis Line & Ticks
+      dCtx.strokeStyle = '#64748b';
+      dCtx.lineWidth = 1.5;
+      dCtx.beginPath();
+      dCtx.moveTo(padX, yBaseline);
+      dCtx.lineTo(width - padX, yBaseline);
+      dCtx.stroke();
+
+      dCtx.fillStyle = '#94a3b8';
+      dCtx.font = '10px Inter, sans-serif';
+      for (let v = domainX.min; v <= domainX.max; v += 10) {
+        const x = valToPx(v, width, padX);
+        dCtx.beginPath();
+        dCtx.moveTo(x, yBaseline);
+        dCtx.lineTo(x, yBaseline + 4);
+        dCtx.stroke();
+        dCtx.fillText(v.toString(), x, yBaseline + 16);
+      }
+
+      // Axis title
+      dCtx.fillStyle = '#cbd5e1';
+      dCtx.font = '11px Inter, sans-serif';
+      dCtx.fillText(dict.axisXTitle, width / 2, height - 8);
+    }
+
+    function drawRocCurve(metrics) {
+      const { width, height } = setCanvasResolution(rocCanvas);
+      const pad = 24;
+      const plotW = width - pad * 2;
+      const plotH = height - pad * 2;
+      const dict = i18n[state.lang];
+
+      rCtx.clearRect(0, 0, width, height);
+
+      // Background Grid
+      rCtx.strokeStyle = '#1e293b';
+      rCtx.lineWidth = 1;
+      rCtx.beginPath();
+      rCtx.moveTo(pad, pad + plotH / 2);
+      rCtx.lineTo(pad + plotW, pad + plotH / 2);
+      rCtx.moveTo(pad + plotW / 2, pad);
+      rCtx.lineTo(pad + plotW / 2, pad + plotH);
+      rCtx.stroke();
+
+      // Diagonal non-discrimination line
+      rCtx.strokeStyle = '#475569';
+      rCtx.lineWidth = 1.5;
+      rCtx.setLineDash([3, 3]);
+      rCtx.beginPath();
+      rCtx.moveTo(pad, pad + plotH);
+      rCtx.lineTo(pad + plotW, pad);
+      rCtx.stroke();
+      rCtx.setLineDash([]);
+
+      // Compute ROC points
+      const points = [];
+      const steps = 80;
+      for (let i = 0; i <= steps; i++) {
+        const t = domainX.min + (i / steps) * (domainX.max - domainX.min);
+        let s, sp;
+        if (state.higherIsDisease) {
+          s = 1 - normCdf(t, state.meanDisease, state.stdDisease);
+          sp = normCdf(t, state.meanHealthy, state.stdHealthy);
+        } else {
+          s = normCdf(t, state.meanDisease, state.stdDisease);
+          sp = 1 - normCdf(t, state.meanHealthy, state.stdHealthy);
+        }
+        const fpr = 1 - sp;
+        points.push({ fpr, tpr: s });
+      }
+
+      points.sort((a, b) => a.fpr - b.fpr);
+
+      // Draw ROC curve line
+      rCtx.beginPath();
+      rCtx.lineWidth = 2.5;
+      rCtx.strokeStyle = '#38bdf8';
+      points.forEach((pt, idx) => {
+        const px = pad + pt.fpr * plotW;
+        const py = pad + plotH - pt.tpr * plotH;
+        if (idx === 0) rCtx.moveTo(px, py);
+        else rCtx.lineTo(px, py);
+      });
+      rCtx.stroke();
+
+      // Operating point
+      const currentFpr = metrics.fpRate;
+      const currentTpr = metrics.sens;
+      const curX = pad + currentFpr * plotW;
+      const curY = pad + plotH - currentTpr * plotH;
+
+      rCtx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+      rCtx.beginPath();
+      rCtx.arc(curX, curY, 8, 0, Math.PI * 2);
+      rCtx.fill();
+
+      rCtx.fillStyle = '#ef4444';
+      rCtx.beginPath();
+      rCtx.arc(curX, curY, 4.5, 0, Math.PI * 2);
+      rCtx.fill();
+      rCtx.strokeStyle = '#ffffff';
+      rCtx.lineWidth = 1.5;
+      rCtx.stroke();
+
+      // Labels
+      rCtx.fillStyle = '#64748b';
+      rCtx.font = '8px Inter, sans-serif';
+      rCtx.textAlign = 'left';
+      rCtx.fillText(dict.rocFpr, width - pad - 20, height - 6);
+      rCtx.fillText(dict.rocSens, 4, pad + 10);
+    }
+
+    function render() {
+      const dict = i18n[state.lang];
+
+      txtThreshold.textContent = parseFloat(state.threshold).toFixed(1);
+      txtMeanHealthy.textContent = parseFloat(state.meanHealthy).toFixed(1);
+      txtStdHealthy.textContent = parseFloat(state.stdHealthy).toFixed(1);
+      txtMeanDisease.textContent = parseFloat(state.meanDisease).toFixed(1);
+      txtStdDisease.textContent = parseFloat(state.stdDisease).toFixed(1);
+      txtPrevalence.textContent = (state.prevalence * 100).toFixed(0) + '%';
+
+      sliderThreshold.value = state.threshold;
+      sliderMeanHealthy.value = state.meanHealthy;
+      sliderStdHealthy.value = state.stdHealthy;
+      sliderMeanDisease.value = state.meanDisease;
+      sliderStdDisease.value = state.stdDisease;
+      sliderPrevalence.value = Math.round(state.prevalence * 100);
+
+      // Direction Badge updates
+      if (state.higherIsDisease) {
+        directionBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        directionTextLabel.textContent = dict.dirHigherBadge;
+        btnDirHigher.classList.add('ring-2', 'ring-blue-600', 'bg-blue-50', 'text-blue-700', 'border-blue-300');
+        btnDirHigher.classList.remove('border-slate-200', 'text-slate-600');
+        btnDirLower.classList.remove('ring-2', 'ring-blue-600', 'bg-blue-50', 'text-blue-700', 'border-blue-300');
+        btnDirLower.classList.add('border-slate-200', 'text-slate-600');
+      } else {
+        directionBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200';
+        directionTextLabel.textContent = dict.dirLowerBadge;
+        btnDirLower.classList.add('ring-2', 'ring-blue-600', 'bg-blue-50', 'text-blue-700', 'border-blue-300');
+        btnDirLower.classList.remove('border-slate-200', 'text-slate-600');
+        btnDirHigher.classList.remove('ring-2', 'ring-blue-600', 'bg-blue-50', 'text-blue-700', 'border-blue-300');
+        btnDirHigher.classList.add('border-slate-200', 'text-slate-600');
+      }
+
+      const metrics = calculateMetrics();
+      updateMetricsUI(metrics);
+      drawDensityCurves();
+      drawRocCurve(metrics);
+    }
+
+    // Attach Language Buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.getAttribute('data-lang'));
+      });
+    });
+
+    // Slider Listeners
+    sliderThreshold.addEventListener('input', (e) => {
+      state.threshold = parseFloat(e.target.value);
+      render();
+    });
+
+    sliderMeanHealthy.addEventListener('input', (e) => {
+      state.meanHealthy = parseFloat(e.target.value);
+      render();
+    });
+
+    sliderStdHealthy.addEventListener('input', (e) => {
+      state.stdHealthy = parseFloat(e.target.value);
+      render();
+    });
+
+    sliderMeanDisease.addEventListener('input', (e) => {
+      state.meanDisease = parseFloat(e.target.value);
+      render();
+    });
+
+    sliderStdDisease.addEventListener('input', (e) => {
+      state.stdDisease = parseFloat(e.target.value);
+      render();
+    });
+
+    sliderPrevalence.addEventListener('input', (e) => {
+      state.prevalence = parseFloat(e.target.value) / 100;
+      render();
+    });
+
+    btnDirHigher.addEventListener('click', () => {
+      state.higherIsDisease = true;
+      render();
+    });
+
+    btnDirLower.addEventListener('click', () => {
+      state.higherIsDisease = false;
+      render();
+    });
+
+    btnReset.addEventListener('click', () => {
+      state.meanHealthy = 38.0;
+      state.stdHealthy = 8.0;
+      state.meanDisease = 62.0;
+      state.stdDisease = 8.0;
+      state.threshold = 50.0;
+      state.higherIsDisease = true;
+      state.prevalence = 0.15;
+      presetSelect.value = 'troponin';
+      render();
+    });
+
+    presetSelect.addEventListener('change', (e) => {
+      switch (e.target.value) {
+        case 'troponin':
+          state.meanHealthy = 38;
+          state.stdHealthy = 8;
+          state.meanDisease = 62;
+          state.stdDisease = 8;
+          state.threshold = 50;
+          state.higherIsDisease = true;
+          state.prevalence = 0.15;
+          break;
+        case 'platelets':
+          state.meanHealthy = 65;
+          state.stdHealthy = 9;
+          state.meanDisease = 35;
+          state.stdDisease = 10;
+          state.threshold = 48;
+          state.higherIsDisease = false;
+          state.prevalence = 0.08;
+          break;
+        case 'highSeparation':
+          state.meanHealthy = 28;
+          state.stdHealthy = 6;
+          state.meanDisease = 72;
+          state.stdDisease = 6;
+          state.threshold = 50;
+          state.higherIsDisease = true;
+          state.prevalence = 0.20;
+          break;
+        case 'highOverlap':
+          state.meanHealthy = 45;
+          state.stdHealthy = 10;
+          state.meanDisease = 55;
+          state.stdDisease = 10;
+          state.threshold = 50;
+          state.higherIsDisease = true;
+          state.prevalence = 0.30;
+          break;
+        case 'unequalVariance':
+          state.meanHealthy = 36;
+          state.stdHealthy = 5;
+          state.meanDisease = 60;
+          state.stdDisease = 14;
+          state.threshold = 48;
+          state.higherIsDisease = true;
+          state.prevalence = 0.12;
+          break;
+      }
+      render();
+    });
+
+    function handlePointerThreshold(clientX) {
+      const rect = densityCanvas.getBoundingClientRect();
+      const clickX = clientX - rect.left;
+      const newVal = pxToVal(clickX, rect.width, 45);
+      state.threshold = Math.max(10, Math.min(90, Math.round(newVal * 2) / 2));
+      render();
+    }
+
+    densityCanvas.addEventListener('mousedown', (e) => {
+      state.isDraggingThreshold = true;
+      handlePointerThreshold(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (state.isDraggingThreshold) {
+        handlePointerThreshold(e.clientX);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      state.isDraggingThreshold = false;
+    });
+
+    densityCanvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        state.isDraggingThreshold = true;
+        handlePointerThreshold(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (state.isDraggingThreshold && e.touches.length > 0) {
+        handlePointerThreshold(e.touches[0].clientX);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      state.isDraggingThreshold = false;
+    });
+
+    window.addEventListener('resize', () => {
+      render();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setLanguage(state.lang);
+    });
+  </script>
+</body>
+</html>
