@@ -9,8 +9,8 @@
     ==========================================================================
     SIMULADOR DE RENDIMENT DIAGNÒSTIC (DIAGNOSTIC TEST SIMULATOR)
     --------------------------------------------------------------------------
-    Autor original / Concepte: [El teu nom o usuari de GitHub]
     Desenvolupament, matemàtiques i codificació: Creat amb l'assistència de Google Gemini
+    Suggeriments i gestió d'errors: Adreceu-vos a GitHub Issues (sense correu per evitar spam)
     Llicència: Creative Commons Reconeixement-NoComercial 4.0 Internacional (CC BY-NC 4.0)
     ==========================================================================
   -->
@@ -62,12 +62,12 @@
       <!-- Presets, Suggestions & Language Selector -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0 flex-nowrap">
         
-        <!-- Suggestions / Feedback Button (Direct link to GitHub Issues without exposing email) -->
-        <a id="btnFeedback" href="https://github.com/<el-teu-usuari>/<nom-del-repositori>/issues/new?labels=enhancement,feedback&title=%5BSuggeriment%5D+" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shrink-0">
+        <!-- Suggestions & Bug Reports (Direct link to GitHub Issues without exposing email) -->
+        <a id="btnFeedback" href="#" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors shrink-0">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
           </svg>
-          <span id="txtFeedback">Suggeriments</span>
+          <span id="txtFeedback">Suggeriments i errors (GitHub)</span>
         </a>
 
         <!-- Presets Selector -->
@@ -467,24 +467,26 @@
           </div>
           <div>
             <h4 id="lblCollabHeading" class="font-bold text-slate-800">Vols col·laborar o proposar millores?</h4>
-            <p id="lblCollabSub" class="text-slate-500">Aquest simulador és de codi obert i obert a docents, estudiants i investigadors.</p>
+            <p id="lblCollabSub" class="text-slate-500">Per a nous casos, millores docents o reportar errors, adreceu-vos al nostre repositori de GitHub.</p>
           </div>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <a id="btnFooterCollab" href="README.md#how-to-contribute" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold transition-colors">
+          <a id="btnFooterCollab" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold transition-colors">
             Com col·laborar
           </a>
-          <a id="btnFooterIssues" href="https://github.com/<el-teu-usuari>/<nom-del-repositori>/issues/new?labels=enhancement,feedback&title=%5BSuggeriment%5D+" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors shadow-xs">
-            Enviar suggeriment
+          <a id="btnFooterIssues" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors shadow-xs">
+            GitHub Issues (Errors i millores)
           </a>
         </div>
       </div>
 
-      <!-- Project Metadata, Author, Gemini Credit & License -->
-      <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <span id="lblAuthorCredit">Autoria: <strong>[El teu nom / Author Name]</strong></span>
+      <!-- Project Metadata, Author, Collaborators, Gemini Credit & License -->
+      <div class="pt-2 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span id="lblAuthorCredit">Autoria: <strong>El teu nom</strong></span>
+          <span id="collabSep">&bull;</span>
+          <span id="lblCollabCredit">Col·laboradors: <strong class="text-slate-700">[Llista de col·laboradors]</strong></span>
           <span>&bull;</span>
           <span id="lblGeminiCredit" class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
             Desenvolupat amb <strong class="text-blue-600">Google Gemini</strong>
@@ -500,9 +502,28 @@
   </footer>
 
   <script>
+    /* ==========================================================================
+       CONFIGURACIÓ DE L'AUTORIA I DEL REPOSITORI (MODIFICA AQUÍ ELS TEUS DADES)
+       Modifica únicament aquests valors; el simulador s'actualitzarà automàticament 
+       en tots els idiomes i enllaços de GitHub sense haver de tocar res més.
+       ========================================================================== */
+    const PROJECT_CONFIG = {
+      // El teu nom o àlies professional:
+      authorName: "Daniel Alomar-Claramonte",
+
+      // Enllaç opcional al teu perfil de GitHub o web personal (deixa "" si no en vols):
+      authorUrl: "https://www.coneixement.info",
+
+      // Noms o usuaris dels col·laboradors (separats per comes, o deixa "" si estàs sol):
+      collaborators: "Laia Humbert Vidal",
+
+      // Enllaç al teu repositori a GitHub (s'utilitzarà automàticament per als botons de tiquets i millores):
+      githubRepoUrl: "https://github.com/daniel-alomar/SimuladorProvesDiag"
+    };
+    /* ========================================================================== */
+
     // Mathematical helper functions for Gaussian Normal Distribution
     function erf(x) {
-      // Abramowitz and Stegun numerical approximation formula 7.1.26
       const a1 =  0.254829592;
       const a2 = -0.284496736;
       const a3 =  1.421413741;
@@ -529,10 +550,7 @@
       return e / m;
     }
 
-    // Intelligent language resolution:
-    // 1. Explicit user selection in localStorage
-    // 2. Client browser languages array
-    // 3. Fallback to English ('en')
+    // Intelligent language resolution
     function detectInitialLanguage() {
       const stored = localStorage.getItem('diag_lang');
       if (stored && ['ca', 'es', 'en'].includes(stored)) {
@@ -560,10 +578,10 @@
       meanDisease: 62.0,
       stdDisease: 8.0,
       threshold: 50.0,
-      higherIsDisease: true, // true: X >= cutoff is test positive; false: X <= cutoff is test positive
-      prevalence: 0.15,      // 15%
+      higherIsDisease: true,
+      prevalence: 0.15,
       isDraggingThreshold: false,
-      hoverValue: null       // Coordinate for biomarker inspector probe
+      hoverValue: null
     };
 
     // Multilingual Translations Dictionary
@@ -571,11 +589,13 @@
       ca: {
         appTitle: "Simulador de Proves Diagnòstiques",
         appSubtitle: "Explora el llindar de tall, la distribució de marcadors, sensibilitat, especificitat, raons de versemblança i ROC",
-        txtFeedback: "Suggeriments",
+        txtFeedback: "Suggeriments i errors (GitHub)",
         lblCollabHeading: "Vols col·laborar o proposar millores?",
-        lblCollabSub: "Aquest simulador és de codi obert i obert a docents, estudiants i investigadors.",
+        lblCollabSub: "Per a nous casos, millores docents o reportar errors, adreceu-vos al nostre repositori de GitHub.",
         btnFooterCollab: "Com col·laborar",
-        btnFooterIssues: "Enviar suggeriment",
+        btnFooterIssues: "GitHub Issues (Errors i millores)",
+        lblAuthorPrefix: "Autoria:",
+        lblCollabPrefix: "Col·laboradors:",
         lblPresets: "Casos típics:",
         presets: [
           { val: "troponin", text: "1. Marcadors elevats (ex: Troponina)" },
@@ -650,7 +670,6 @@
         card2Text: "Si la patologia cursa amb excés del marcador (troponina, PCR), valors alts indiquen malaltia. Si cursa amb dèficit (anèmia, plaquetes), valors baixos indiquen malaltia i la corba de casos queda a l'esquerra.",
         card3Title: "3. Matemàtica del llindar òptim:",
         card3Text: "L'Índex de Youden (J = Sensibilitat + Especificitat - 1) identifica el tall que ofereix el màxim equilibri conjunt, corresponent al punt de la corba ROC amb major distància vertical respecte a la diagonal d'atzar.",
-        lblAuthorCredit: "Autoria: <strong>[El teu nom / Author Name]</strong>",
         lblGeminiCredit: "Desenvolupat amb <strong class=\"text-blue-600\">Google Gemini</strong>",
         lblLicense: "Llicència CC BY-NC 4.0 (Creative Commons)",
         curveHealthy: "Sense malaltia",
@@ -668,11 +687,13 @@
       es: {
         appTitle: "Simulador de Pruebas Diagnósticas",
         appSubtitle: "Explora el umbral de decisión, distribución de marcadores, sensibilidad, especificidad, razones de verosimilitud y ROC",
-        txtFeedback: "Sugerencias",
+        txtFeedback: "Sugerencias y errores (GitHub)",
         lblCollabHeading: "¿Quieres colaborar o proponer mejoras?",
-        lblCollabSub: "Este simulador es de código abierto y está abierto a docentes, estudiantes e investigadores.",
+        lblCollabSub: "Para nuevos casos, mejoras docentes o reportar errores, dirígete a nuestro repositorio de GitHub.",
         btnFooterCollab: "Cómo colaborar",
-        btnFooterIssues: "Enviar sugerencia",
+        btnFooterIssues: "GitHub Issues (Errores y mejoras)",
+        lblAuthorPrefix: "Autoría:",
+        lblCollabPrefix: "Colaboradores:",
         lblPresets: "Casos típicos:",
         presets: [
           { val: "troponin", text: "1. Marcadores elevados (ej: Troponina)" },
@@ -747,7 +768,6 @@
         card2Text: "Si la patología cursa con exceso del biomarcador (troponina, PCR), valores altos indican enfermedad. Si cursa con déficit (anemia, plaquetas), valores bajos indican enfermedad y la curva patológica queda a la izquierda.",
         card3Title: "3. Matemática del corte óptimo:",
         card3Text: "El Índice de Youden (J = Sensibilidad + Especificidad - 1) identifica el corte de mayor equilibrio conjunto, correspondiente al punto de la curva ROC con mayor distancia vertical respecto a la diagonal de azar.",
-        lblAuthorCredit: "Autoría: <strong>[Tu nombre / Author Name]</strong>",
         lblGeminiCredit: "Desarrollado con <strong class=\"text-blue-600\">Google Gemini</strong>",
         lblLicense: "Licencia CC BY-NC 4.0 (Creative Commons)",
         curveHealthy: "Sin enfermedad",
@@ -765,11 +785,13 @@
       en: {
         appTitle: "Diagnostic Test Performance Simulator",
         appSubtitle: "Explore decision cutoffs, biomarker distributions, sensitivity, specificity, likelihood ratios and ROC",
-        txtFeedback: "Suggestions",
+        txtFeedback: "Feedback & Bug Reports (GitHub)",
         lblCollabHeading: "Want to contribute or suggest improvements?",
-        lblCollabSub: "This simulator is open source and open to educators, students, and researchers.",
+        lblCollabSub: "For new clinical scenarios, pedagogical additions or reporting bugs, head to our GitHub repository.",
         btnFooterCollab: "How to contribute",
-        btnFooterIssues: "Send suggestion",
+        btnFooterIssues: "GitHub Issues (Bugs & Feedback)",
+        lblAuthorPrefix: "Author:",
+        lblCollabPrefix: "Contributors:",
         lblPresets: "Typical scenarios:",
         presets: [
           { val: "troponin", text: "1. Elevated markers (e.g., Troponin)" },
@@ -844,7 +866,6 @@
         card2Text: "When pathology involves marker elevation (troponin, CRP), high values indicate disease. When it involves deficiency (anemia, platelets), lower values indicate disease and the pathological curve shifts to the left.",
         card3Title: "3. Mathematical optimal cutoff:",
         card3Text: "Youden's Index (J = Sensitivity + Specificity - 1) finds the operating point with maximal combined efficacy, matching the ROC curve point furthest from the diagonal line of chance.",
-        lblAuthorCredit: "Author: <strong>[Your Name / Author Name]</strong>",
         lblGeminiCredit: "Developed with <strong class=\"text-blue-600\">Google Gemini</strong>",
         lblLicense: "License CC BY-NC 4.0 (Creative Commons)",
         curveHealthy: "Non-diseased (Healthy)",
@@ -924,6 +945,21 @@
     function safeSetHtml(id, html) {
       const el = document.getElementById(id);
       if (el && html !== undefined) el.innerHTML = html;
+    }
+
+    // Dynamic GitHub and Feedback Link Bindings from PROJECT_CONFIG
+    function updateProjectLinks() {
+      const issuesUrl = `${PROJECT_CONFIG.githubRepoUrl}/issues/new?labels=enhancement,feedback,bug&title=%5BIncid%C3%A8ncia+o+Suggeriment%5D+`;
+      const collabUrl = `${PROJECT_CONFIG.githubRepoUrl}#how-to-contribute`;
+
+      const btnFeedback = document.getElementById('btnFeedback');
+      if (btnFeedback) btnFeedback.href = issuesUrl;
+
+      const btnFooterIssues = document.getElementById('btnFooterIssues');
+      if (btnFooterIssues) btnFooterIssues.href = issuesUrl;
+
+      const btnFooterCollab = document.getElementById('btnFooterCollab');
+      if (btnFooterCollab) btnFooterCollab.href = collabUrl;
     }
 
     // Language switcher handler
@@ -1053,8 +1089,25 @@
       safeSetText('btnFooterCollab', dict.btnFooterCollab);
       safeSetText('btnFooterIssues', dict.btnFooterIssues);
 
-      // Footer Credits and License
-      safeSetHtml('lblAuthorCredit', dict.lblAuthorCredit);
+      // Footer Credits, Author, Collaborators and Gemini
+      const authorInner = PROJECT_CONFIG.authorUrl
+        ? `<a href="${PROJECT_CONFIG.authorUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline font-bold text-slate-700">${PROJECT_CONFIG.authorName}</a>`
+        : `<strong>${PROJECT_CONFIG.authorName}</strong>`;
+      safeSetHtml('lblAuthorCredit', `${dict.lblAuthorPrefix} ${authorInner}`);
+
+      const collabEl = document.getElementById('lblCollabCredit');
+      const collabSep = document.getElementById('collabSep');
+      if (PROJECT_CONFIG.collaborators && PROJECT_CONFIG.collaborators.trim().length > 0) {
+        if (collabEl) {
+          collabEl.style.display = 'inline';
+          collabEl.innerHTML = `${dict.lblCollabPrefix} <strong class="text-slate-700">${PROJECT_CONFIG.collaborators}</strong>`;
+        }
+        if (collabSep) collabSep.style.display = 'inline';
+      } else {
+        if (collabEl) collabEl.style.display = 'none';
+        if (collabSep) collabSep.style.display = 'none';
+      }
+
       safeSetHtml('lblGeminiCredit', dict.lblGeminiCredit);
       safeSetText('lblLicense', dict.lblLicense);
 
@@ -1830,6 +1883,7 @@
 
     // Initialization
     window.addEventListener('DOMContentLoaded', () => {
+      updateProjectLinks();
       setLanguage(state.lang);
     });
   </script>
