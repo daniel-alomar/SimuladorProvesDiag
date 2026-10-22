@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Daniel Alomar & Google Gemini">
-  <meta name="description" content="Laboratori interactiu autònom (100% Offline) d'epidemiologia clínica i bioestadística per a l'anàlisi de proves diagnòstiques, corbes ROC, teorema de Bayes i 20 casos d'autoavaluació.">
-  <title>Laboratori de Proves Diagnòstiques | Diagnostic Performance Lab</title>
+  <meta name="author" content="Daniel Alomar-Claramonte; Co-authors: Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan">
+  <meta name="description" content="Simulador de Proves Diagnòstiques (100% Offline): eina interactiva d'epidemiologia clínica i bioestadística per a l'anàlisi de proves diagnòstiques, corbes ROC, teorema de Bayes i 20 casos d'autoavaluació.">
+  <title>Simulador de Proves Diagnòstiques | Diagnostic Test Simulator</title>
   <style>
     :root {
       --bg-canvas: #f8fafc;
@@ -1102,7 +1102,7 @@
         <div class="brand-group">
           <div class="brand-logo" aria-hidden="true">&Delta;</div>
           <div style="min-width: 0;">
-            <h1 id="appTitle" class="brand-title">Laboratori de Proves Diagn&ograve;stiques</h1>
+            <h1 id="appTitle" class="brand-title">Simulador de Proves Diagn&ograve;stiques</h1>
             <p id="appSubtitle" class="brand-subtitle">Simulaci&oacute; interactiva de llindars de decisi&oacute;, corbes ROC, valors predictius i teorema de Bayes</p>
           </div>
         </div>
@@ -1116,6 +1116,9 @@
               <option value="highSeparation">3. Test excel&middot;lent (Alta separaci&oacute;)</option>
               <option value="highOverlap">4. Test feble (Gran solapament)</option>
               <option value="unequalVariance">5. Dispersi&oacute; asim&egrave;trica (&sigma;M &gt; &sigma;S)</option>
+              <option value="ruleOutDdimer">6. Cribratge / Exclusi&oacute; (D&iacute;mer-D &middot; SnNout)</option>
+              <option value="ruleInOnco">7. Confirmaci&oacute; Oncol&ograve;gica (SpPin)</option>
+              <option value="rareScreening">8. Cribratge Malaltia Rara (Prev. 1%)</option>
             </select>
           </div>
 
@@ -1531,9 +1534,9 @@
   <footer class="app-footer">
     <div class="container footer-bar">
       <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-        <span id="lblAuthorCredit">Autoria: <strong>El teu nom</strong></span>
+        <span id="lblAuthorCredit">Autor: <strong>Daniel Alomar-Claramonte</strong></span>
         <span id="collabSep">&bull;</span>
-        <span id="lblCollabCredit">Col&middot;laboradors: <strong>Equip docent</strong></span>
+        <span id="lblCollabCredit">Coautors: <strong>Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan</strong></span>
         <span>&bull;</span>
         <span id="lblGeminiCredit" class="badge-Neutral">Desenvolupat amb <strong style="color: var(--accent-primary);">Google Gemini</strong></span>
         <span>&bull;</span>
@@ -1562,9 +1565,9 @@
        CONFIGURACIÓ DE L'AUTORIA I DEL REPOSITORI
        ========================================================================== */
     const PROJECT_CONFIG = {
-      authorName: "Daniel Alomar",
+      authorName: "Daniel Alomar-Claramonte",
       authorUrl: "https://github.com/daniel-alomar",
-      collaborators: "Jordi Piera, Ferran Torres, Laia Humbert",
+      collaborators: "Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan",
       githubRepoUrl: "https://github.com/daniel-alomar/SimuladorProvesDiag"
     };
 
@@ -2315,16 +2318,19 @@
        ========================================================================== */
     const i18n = {
       ca: {
-        appTitle: "Laboratori de Proves Diagnòstiques",
+        appTitle: "Simulador de Proves Diagnòstiques",
         appSubtitle: "Simulació interactiva de llindars de decisió, corbes ROC, valors predictius i teorema de Bayes",
         lblOfflineFooter: "Funciona 100% sense connexió a Internet",
         lblPresets: "Escenari:",
         presets: {
-          troponin: "1. Troponina (Marcador elevat)",
-          platelets: "2. Plaquetes (Marcador disminuït)",
-          highSeparation: "3. Test excel·lent (Alta separació)",
-          highOverlap: "4. Test feble (Gran solapament)",
-          unequalVariance: "5. Dispersió asimètrica (σM > σS)"
+          troponin: "1. Troponina (Marcador elevat clàssic)",
+          platelets: "2. Plaquetes (Marcador disminuït · Polaritat inversa)",
+          highSeparation: "3. Test excel·lent (Alta separació · AUC > 0.99)",
+          highOverlap: "4. Test feble (Gran solapament biològic)",
+          unequalVariance: "5. Dispersió asimètrica (Heteroscedasticitat σM > σS)",
+          ruleOutDdimer: "6. Exclusió a Urgències (Dímer-D · Regla SnNout)",
+          ruleInOnco: "7. Confirmació Oncològica (Biomarcador · Regla SpPin)",
+          rareScreening: "8. Cribratge Poblacional (Prev. 1% · Paradoxa VPP)"
         },
         tabSimTitle: "1. Simulador Interactiu",
         tabTheoryTitle: "2. Fonaments Teòrics i Guia Clínica",
@@ -2412,7 +2418,7 @@
           b4: "4. Corba ROC i Youden (4)",
           b5: "5. Raons RV i Bayes (4)"
         },
-        authorPrefix: "Autoria:", collabPrefix: "Col·laboradors:",
+        authorPrefix: "Autor:", collabPrefix: "Coautors:",
         geminiCredit: 'Desenvolupat amb <strong style="color: var(--accent-primary);">Google Gemini</strong>',
         btnFooterIssues: "GitHub Issues (Suggeriments i errors)",
         lblLicense: "Llicència CC BY-NC 4.0",
@@ -2666,22 +2672,37 @@
                 <strong>6. Shreffler J, Huecker MR.</strong> <em>Diagnostic Testing Accuracy: Sensitivity, Specificity, Predictive Values and Likelihood Ratios.</em> StatPearls [Internet]. Treasure Island (FL): StatPearls Publishing; NCBI Bookshelf. 
                 <a href="https://www.ncbi.nlm.nih.gov/books/NBK557491/" target="_blank" rel="noopener noreferrer">Llegir a NCBI Bookshelf (PubMed) ↗</a>
               </li>
+              <li class="ref-item">
+                <strong>7. Youden WJ.</strong> <em>Index for rating diagnostic tests.</em> Cancer. 1950;3(1):32-35. — Article clàssic original on es defineix l'estadístic <em>J</em> de Youden per a l'optimització del punt de tall diagnòstic. 
+                <a href="https://doi.org/10.1002/1097-0142(1950)3:1%3C32::AID-CNCR2820030106%3E3.0.CO;2-3" target="_blank" rel="noopener noreferrer">Consultar via DOI ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>8. Fagan TJ.</strong> <em>Nomogram for Bayes theorem.</em> New England Journal of Medicine (NEJM). 1975;293(5):257. — Publicació original del nomograma logarítmic per transformar probabilitats pre-test en post-test mitjançant Raons de Versemblança. 
+                <a href="https://doi.org/10.1056/NEJM197507312930513" target="_blank" rel="noopener noreferrer">Consultar a NEJM ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>9. Hanley JA, McNeil BJ.</strong> <em>The meaning and use of the area under a receiver operating characteristic (ROC) curve.</em> Radiology. 1982;143(1):29-36. — Demostració formal de l'equivalència entre l'AUC-ROC i l'estadístic no paramètric de Mann-Whitney-Wilcoxon. 
+                <a href="https://doi.org/10.1148/radiology.143.1.7063747" target="_blank" rel="noopener noreferrer">Consultar via DOI ↗</a>
+              </li>
             </ul>
           </article>
         `
       },
 
       es: {
-        appTitle: "Laboratorio de Pruebas Diagnósticas",
+        appTitle: "Simulador de Pruebas Diagnósticas",
         appSubtitle: "Simulación interactiva de umbrales de decisión, curvas ROC, valores predictivos y teorema de Bayes",
         lblOfflineFooter: "Funciona 100% sin conexión a Internet",
         lblPresets: "Escenario:",
         presets: {
-          troponin: "1. Troponina (Marcador elevado)",
-          platelets: "2. Plaquetas (Marcador disminuido)",
-          highSeparation: "3. Test excelente (Alta separación)",
-          highOverlap: "4. Test débil (Gran solapamiento)",
-          unequalVariance: "5. Dispersión asimétrica (σE > σS)"
+          troponin: "1. Troponina (Marcador elevado clásico)",
+          platelets: "2. Plaquetas (Marcador disminuido · Polaridad inversa)",
+          highSeparation: "3. Test excelente (Alta separación · AUC > 0.99)",
+          highOverlap: "4. Test débil (Gran solapamiento biológico)",
+          unequalVariance: "5. Dispersión asimétrica (Heterocedasticidad σE > σS)",
+          ruleOutDdimer: "6. Exclusión en Urgencias (Dímero-D · Regla SnNout)",
+          ruleInOnco: "7. Confirmación Oncológica (Biomarcador · Regla SpPin)",
+          rareScreening: "8. Cribado Poblacional (Prev. 1% · Paradoja VPP)"
         },
         tabSimTitle: "1. Simulador Interactivo",
         tabTheoryTitle: "2. Fundamentos Teóricos y Guía Clínica",
@@ -2769,7 +2790,7 @@
           b4: "4. Curva ROC y Youden (4)",
           b5: "5. Razones RV y Bayes (4)"
         },
-        authorPrefix: "Autoría:", collabPrefix: "Colaboradores:",
+        authorPrefix: "Autor:", collabPrefix: "Coautores:",
         geminiCredit: 'Desarrollado con <strong style="color: var(--accent-primary);">Google Gemini</strong>',
         btnFooterIssues: "GitHub Issues (Sugerencias y errores)",
         lblLicense: "Licencia CC BY-NC 4.0",
@@ -3023,22 +3044,37 @@
                 <strong>6. Shreffler J, Huecker MR.</strong> <em>Diagnostic Testing Accuracy: Sensitivity, Specificity, Predictive Values and Likelihood Ratios.</em> StatPearls [Internet]. Treasure Island (FL): StatPearls Publishing; NCBI Bookshelf. 
                 <a href="https://www.ncbi.nlm.nih.gov/books/NBK557491/" target="_blank" rel="noopener noreferrer">Leer en NCBI Bookshelf (PubMed) ↗</a>
               </li>
+              <li class="ref-item">
+                <strong>7. Youden WJ.</strong> <em>Index for rating diagnostic tests.</em> Cancer. 1950;3(1):32-35. — Artículo fundacional donde se introduce el estadístico <em>J</em> de Youden para optimizar el punto de corte diagnóstico. 
+                <a href="https://doi.org/10.1002/1097-0142(1950)3:1%3C32::AID-CNCR2820030106%3E3.0.CO;2-3" target="_blank" rel="noopener noreferrer">Consultar vía DOI ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>8. Fagan TJ.</strong> <em>Nomogram for Bayes theorem.</em> New England Journal of Medicine (NEJM). 1975;293(5):257. — Publicación clásica del nomograma logarítmico para el cálculo gráfico de la probabilidad post-test mediante Razones de Verosimilitud. 
+                <a href="https://doi.org/10.1056/NEJM197507312930513" target="_blank" rel="noopener noreferrer">Consultar en NEJM ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>9. Hanley JA, McNeil BJ.</strong> <em>The meaning and use of the area under a receiver operating characteristic (ROC) curve.</em> Radiology. 1982;143(1):29-36. — Demostración formal de la equivalencia entre el AUC-ROC y el estadístico no paramétrico U de Mann-Whitney. 
+                <a href="https://doi.org/10.1148/radiology.143.1.7063747" target="_blank" rel="noopener noreferrer">Consultar vía DOI ↗</a>
+              </li>
             </ul>
           </article>
         `
       },
 
       en: {
-        appTitle: "Diagnostic Test Performance Lab",
+        appTitle: "Diagnostic Test Simulator",
         appSubtitle: "Interactive simulation of decision thresholds, ROC curves, predictive values & Bayes' theorem",
         lblOfflineFooter: "Works 100% offline (no Internet required)",
         lblPresets: "Scenario:",
         presets: {
-          troponin: "1. Troponin (Elevated marker)",
-          platelets: "2. Platelets (Decreased marker)",
-          highSeparation: "3. Excellent test (High separation)",
-          highOverlap: "4. Weak test (High overlap)",
-          unequalVariance: "5. Unequal variance (σD > σH)"
+          troponin: "1. Troponin (Classic elevated marker)",
+          platelets: "2. Platelets (Decreased marker · Inverse polarity)",
+          highSeparation: "3. Excellent test (High separation · AUC > 0.99)",
+          highOverlap: "4. Weak test (Heavy biological overlap)",
+          unequalVariance: "5. Unequal variance (Heteroscedasticity σD > σH)",
+          ruleOutDdimer: "6. Emergency Rule-Out (D-Dimer · SnNout Rule)",
+          ruleInOnco: "7. Oncology Confirmation (Biomarker · SpPin Rule)",
+          rareScreening: "8. Population Screening (Prev. 1% · PPV Paradox)"
         },
         tabSimTitle: "1. Interactive Simulator",
         tabTheoryTitle: "2. Theoretical Handbook & Clinical Guide",
@@ -3126,7 +3162,7 @@
           b4: "4. ROC Curve & Youden (4)",
           b5: "5. Likelihood Ratios & Bayes (4)"
         },
-        authorPrefix: "Author:", collabPrefix: "Contributors:",
+        authorPrefix: "Author:", collabPrefix: "Co-authors:",
         geminiCredit: 'Developed with <strong style="color: var(--accent-primary);">Google Gemini</strong>',
         btnFooterIssues: "GitHub Issues (Feedback & bug reports)",
         lblLicense: "CC BY-NC 4.0 License",
@@ -3379,6 +3415,18 @@
               <li class="ref-item">
                 <strong>6. Shreffler J, Huecker MR.</strong> <em>Diagnostic Testing Accuracy: Sensitivity, Specificity, Predictive Values and Likelihood Ratios.</em> StatPearls [Internet]. Treasure Island (FL): StatPearls Publishing; NCBI Bookshelf. 
                 <a href="https://www.ncbi.nlm.nih.gov/books/NBK557491/" target="_blank" rel="noopener noreferrer">Read on NCBI Bookshelf (PubMed) ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>7. Youden WJ.</strong> <em>Index for rating diagnostic tests.</em> Cancer. 1950;3(1):32-35. — Seminal paper introducing Youden's <em>J</em> statistic for optimal diagnostic threshold selection. 
+                <a href="https://doi.org/10.1002/1097-0142(1950)3:1%3C32::AID-CNCR2820030106%3E3.0.CO;2-3" target="_blank" rel="noopener noreferrer">View via DOI ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>8. Fagan TJ.</strong> <em>Nomogram for Bayes theorem.</em> New England Journal of Medicine (NEJM). 1975;293(5):257. — Classic publication introducing Fagan's logarithmic nomogram for Bayesian updating via Likelihood Ratios. 
+                <a href="https://doi.org/10.1056/NEJM197507312930513" target="_blank" rel="noopener noreferrer">View on NEJM ↗</a>
+              </li>
+              <li class="ref-item">
+                <strong>9. Hanley JA, McNeil BJ.</strong> <em>The meaning and use of the area under a receiver operating characteristic (ROC) curve.</em> Radiology. 1982;143(1):29-36. — Landmark derivation linking the ROC Area Under the Curve (AUC) to the Mann-Whitney U statistic. 
+                <a href="https://doi.org/10.1148/radiology.143.1.7063747" target="_blank" rel="noopener noreferrer">View via DOI ↗</a>
               </li>
             </ul>
           </article>
@@ -3867,7 +3915,44 @@
 
       const cutPx = xToPx(c);
       const clampX = (x, w) => Math.max(padLeft + w / 2 + 6, Math.min(width - padRight - w / 2 - 6, x));
+      const aabbOverlap = (a, b, gapX = 8, gapY = 5) => {
+        return Math.abs(a.x - b.x) < (a.w / 2 + b.w / 2 + gapX) &&
+               Math.abs((a.y + a.h / 2) - (b.y + b.h / 2)) < (a.h / 2 + b.h / 2 + gapY);
+      };
 
+      // 1. Peak Labels ("Sense malaltia" / "Amb malaltia") with 2D collision avoidance
+      densityCtx.font = 'bold 11px sans-serif';
+      const peakHText = t.canvasHealthy;
+      const peakDText = t.canvasDiseased;
+      const peakHW = densityCtx.measureText(peakHText).width + 16;
+      const peakDW = densityCtx.measureText(peakDText).width + 16;
+      const peakBoxH = 20;
+
+      const peakHYCurve = yToPx(normPdf(state.meanHealthy, state.meanHealthy, state.stdHealthy));
+      const peakDYCurve = yToPx(normPdf(state.meanDisease, state.meanDisease, state.stdDisease));
+
+      const peakHBox = {
+        x: clampX(xToPx(state.meanHealthy), peakHW),
+        y: Math.max(padTop + 4, Math.min(baselineY - 68, peakHYCurve - 26)),
+        w: peakHW,
+        h: peakBoxH
+      };
+      const peakDBox = {
+        x: clampX(xToPx(state.meanDisease), peakDW),
+        y: Math.max(padTop + 4, Math.min(baselineY - 68, peakDYCurve - 26)),
+        w: peakDW,
+        h: peakBoxH
+      };
+
+      if (aabbOverlap(peakHBox, peakDBox, 10, 4)) {
+        if (peakHBox.x <= peakDBox.x) {
+          peakHBox.y = Math.max(padTop + 2, peakDBox.y - peakBoxH - 6);
+        } else {
+          peakDBox.y = Math.max(padTop + 2, peakHBox.y - peakBoxH - 6);
+        }
+      }
+
+      // 2. Bottom Metric Boxes ("Especificitat" & "Sensibilitat") with anti-overlap solver
       const specText = `${t.canvasSpecBox}: ${(spec * 100).toFixed(1)}%`;
       const sensText = `${t.canvasSensBox}: ${(sens * 100).toFixed(1)}%`;
       densityCtx.font = 'bold 11px sans-serif';
@@ -3881,17 +3966,86 @@
       const specBox = { x: clampX(rawSpecX, specW), y: baselineY - 28, w: specW, h: boxH };
       const sensBox = { x: clampX(rawSensX, sensW), y: baselineY - 28, w: sensW, h: boxH };
 
+      const minGap = 12;
+      const minCenterDist = (specBox.w / 2) + (sensBox.w / 2) + minGap;
+      if (Math.abs(specBox.x - sensBox.x) < minCenterDist) {
+        const midX = (specBox.x + sensBox.x) / 2;
+        const specIsLeft = (specBox.x < sensBox.x) || (specBox.x === sensBox.x && state.meanHealthy <= state.meanDisease);
+        if (specIsLeft) {
+          specBox.x = clampX(midX - minCenterDist / 2, specBox.w);
+          sensBox.x = clampX(specBox.x + minCenterDist, sensBox.w);
+          specBox.x = clampX(sensBox.x - minCenterDist, specBox.w);
+        } else {
+          sensBox.x = clampX(midX - minCenterDist / 2, sensBox.w);
+          specBox.x = clampX(sensBox.x + minCenterDist, specBox.w);
+          sensBox.x = clampX(specBox.x - minCenterDist, sensBox.w);
+        }
+        // Vertical stagger fallback if narrow mobile canvas still forces horizontal proximity
+        if (Math.abs(specBox.x - sensBox.x) < (specBox.w / 2 + sensBox.w / 2 + 4)) {
+          sensBox.y = specBox.y - boxH - 6;
+        }
+      }
+
+      // Ensure peak labels never collide with bottom metric boxes
+      [peakHBox, peakDBox].forEach(pBox => {
+        [specBox, sensBox].forEach(mBox => {
+          if (aabbOverlap(pBox, mBox, 6, 4)) {
+            pBox.y = Math.max(padTop + 2, mBox.y - pBox.h - 6);
+          }
+        });
+      });
+
+      // Draw Peak Labels
       densityCtx.textAlign = 'center';
       densityCtx.font = 'bold 11px sans-serif';
-      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.86)';
+      densityCtx.strokeStyle = 'rgba(45, 212, 191, 0.65)';
+      densityCtx.lineWidth = 1.2;
+      drawRoundedPill(densityCtx, peakHBox.x - peakHBox.w / 2, peakHBox.y, peakHBox.w, peakHBox.h, 5);
+      densityCtx.fillStyle = '#5eead4';
+      densityCtx.fillText(peakHText, peakHBox.x, peakHBox.y + 14);
+
+      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.86)';
+      densityCtx.strokeStyle = 'rgba(251, 191, 36, 0.65)';
+      drawRoundedPill(densityCtx, peakDBox.x - peakDBox.w / 2, peakDBox.y, peakDBox.w, peakDBox.h, 5);
+      densityCtx.fillStyle = '#fcd34d';
+      densityCtx.fillText(peakDText, peakDBox.x, peakDBox.y + 14);
+
+      // Draw Threshold Line BEFORE bottom metric pills so pills stay cleanly readable on top
+      densityCtx.save();
+      densityCtx.beginPath();
+      densityCtx.setLineDash([6, 4]);
+      densityCtx.moveTo(cutPx, padTop - 6);
+      densityCtx.lineTo(cutPx, baselineY);
+      densityCtx.strokeStyle = '#ffffff';
+      densityCtx.lineWidth = 2.4;
+      densityCtx.stroke();
+      densityCtx.restore();
+
+      const pillText = `${t.canvasThreshold}: ${c.toFixed(1)}`;
+      densityCtx.font = 'bold 11px monospace';
+      const pillW = densityCtx.measureText(pillText).width + 16;
+      const pillX = Math.max(padLeft + pillW / 2, Math.min(width - padRight - pillW / 2, cutPx));
+      densityCtx.fillStyle = '#2563eb';
+      densityCtx.strokeStyle = '#93c5fd';
+      densityCtx.lineWidth = 1.2;
+      drawRoundedPill(densityCtx, pillX - pillW / 2, 8, pillW, 20, 5);
+      densityCtx.fillStyle = '#ffffff';
+      densityCtx.fillText(pillText, pillX, 22);
+
+      // Draw Specificity & Sensitivity Pills on top with crisp opaque dark background
+      densityCtx.textAlign = 'center';
+      densityCtx.font = 'bold 11px sans-serif';
+      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.96)';
       densityCtx.strokeStyle = '#2dd4bf';
-      densityCtx.lineWidth = 1.4;
+      densityCtx.lineWidth = 1.5;
       drawRoundedPill(densityCtx, specBox.x - specBox.w / 2, specBox.y, specBox.w, specBox.h, 5);
       densityCtx.fillStyle = '#5eead4';
       densityCtx.fillText(specText, specBox.x, specBox.y + 15);
 
-      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      densityCtx.fillStyle = 'rgba(15, 23, 42, 0.96)';
       densityCtx.strokeStyle = '#fbbf24';
+      densityCtx.lineWidth = 1.5;
       drawRoundedPill(densityCtx, sensBox.x - sensBox.w / 2, sensBox.y, sensBox.w, sensBox.h, 5);
       densityCtx.fillStyle = '#fcd34d';
       densityCtx.fillText(sensText, sensBox.x, sensBox.y + 15);
@@ -3920,27 +4074,6 @@
         densityCtx.fillStyle = '#fff';
         densityCtx.fillText(pText, px, padTop + 39);
       }
-
-      densityCtx.save();
-      densityCtx.beginPath();
-      densityCtx.setLineDash([6, 4]);
-      densityCtx.moveTo(cutPx, padTop - 6);
-      densityCtx.lineTo(cutPx, baselineY);
-      densityCtx.strokeStyle = '#ffffff';
-      densityCtx.lineWidth = 2.4;
-      densityCtx.stroke();
-      densityCtx.restore();
-
-      const pillText = `${t.canvasThreshold}: ${c.toFixed(1)}`;
-      densityCtx.font = 'bold 11px monospace';
-      const pillW = densityCtx.measureText(pillText).width + 16;
-      const pillX = Math.max(padLeft + pillW / 2, Math.min(width - padRight - pillW / 2, cutPx));
-      densityCtx.fillStyle = '#2563eb';
-      densityCtx.strokeStyle = '#93c5fd';
-      densityCtx.lineWidth = 1.2;
-      drawRoundedPill(densityCtx, pillX - pillW / 2, 8, pillW, 20, 5);
-      densityCtx.fillStyle = '#ffffff';
-      densityCtx.fillText(pillText, pillX, 22);
 
       densityCtx.beginPath();
       densityCtx.moveTo(padLeft, baselineY);
@@ -4123,13 +4256,19 @@
       if (p === 'troponin') {
         Object.assign(state, { meanHealthy: 38, stdHealthy: 8, meanDisease: 62, stdDisease: 8, threshold: 50, higherIsDisease: true, prevalence: 0.15 });
       } else if (p === 'platelets') {
-        Object.assign(state, { meanHealthy: 65, stdHealthy: 8, meanDisease: 35, stdDisease: 10, threshold: 48, higherIsDisease: false, prevalence: 0.15 });
+        Object.assign(state, { meanHealthy: 68, stdHealthy: 7, meanDisease: 34, stdDisease: 10, threshold: 49, higherIsDisease: false, prevalence: 0.18 });
       } else if (p === 'highSeparation') {
-        Object.assign(state, { meanHealthy: 30, stdHealthy: 6, meanDisease: 72, stdDisease: 6, threshold: 51, higherIsDisease: true, prevalence: 0.20 });
+        Object.assign(state, { meanHealthy: 26, stdHealthy: 5.5, meanDisease: 74, stdDisease: 6, threshold: 49.5, higherIsDisease: true, prevalence: 0.20 });
       } else if (p === 'highOverlap') {
-        Object.assign(state, { meanHealthy: 45, stdHealthy: 10, meanDisease: 55, stdDisease: 10, threshold: 50, higherIsDisease: true, prevalence: 0.20 });
+        Object.assign(state, { meanHealthy: 46, stdHealthy: 11, meanDisease: 54, stdDisease: 11, threshold: 50, higherIsDisease: true, prevalence: 0.25 });
       } else if (p === 'unequalVariance') {
-        Object.assign(state, { meanHealthy: 40, stdHealthy: 5, meanDisease: 65, stdDisease: 14, threshold: 52, higherIsDisease: true, prevalence: 0.15 });
+        Object.assign(state, { meanHealthy: 34, stdHealthy: 4.5, meanDisease: 62, stdDisease: 16, threshold: 45, higherIsDisease: true, prevalence: 0.15 });
+      } else if (p === 'ruleOutDdimer') {
+        Object.assign(state, { meanHealthy: 32, stdHealthy: 9, meanDisease: 64, stdDisease: 11, threshold: 42, higherIsDisease: true, prevalence: 0.12 });
+      } else if (p === 'ruleInOnco') {
+        Object.assign(state, { meanHealthy: 42, stdHealthy: 6, meanDisease: 68, stdDisease: 10, threshold: 60, higherIsDisease: true, prevalence: 0.30 });
+      } else if (p === 'rareScreening') {
+        Object.assign(state, { meanHealthy: 28, stdHealthy: 5, meanDisease: 58, stdDisease: 12, threshold: 41, higherIsDisease: true, prevalence: 0.01 });
       }
       syncControlsFromState();
       updateAll();
