@@ -17,11 +17,29 @@ An autonomous, interactive web simulator designed for students, educators, clini
 
 ---
 
+## Layout and guided experiments
+
+Wide screens use two independently flowing columns: distributions, probabilities and counts on the left; controls and ROC on the right. This removes empty grid cells between panels of different heights. Below 1,100 pixels, the order is distributions, controls, probabilities, counts and ROC.
+
+The three starting cards explain the model and purpose of each experiment. “Interpret a positive result” loads the named “Bayes · 90% sensitivity and specificity” preset: 20% prevalence, 69.23% PPV and 2.70% disease probability after a negative result. Focus moves to the prevalence control. Editing parameters still marks the model as custom.
+
+## Teaching structure and clinical interpretation guide
+
+The simulator follows three steps: **observe distributions, adjust the model, and interpret results**. Probability cards show prior risk, disease probability after a positive result, and residual disease risk after a negative result. Density, count and AUC explanations can be expanded on demand.
+
+The handbook has seven chapters: distributions and thresholds; sensitivity and specificity; predictive values; ROC, AUC and Youden; Bayes and likelihood ratios; clinical interpretation; glossary and references. Each chapter starts with a key idea, with expandable formulas.
+
+Worked examples load directly into the simulator: thresholds, rare screening, a decreased marker, Bayesian updating, and a crossing ROC. The Bayesian example compares prior risks of 5%, 20% and 80% at 90% sensitivity and specificity. The screening example distinguishes fractional expected counts from rounded matrix counts.
+
+The clinical guide covers the diagnostic question, prior risk, applicability of evidence, risk updating, consequences and remaining uncertainty. It distinguishes biomarker cutoffs from clinical decision thresholds. Examples are synthetic and are not clinical protocols.
+
+Navigation includes a skip link, an active chapter indicator and keyboard focus on example controls. Printing the handbook temporarily expands its formulas.
+
 ## 👥 Authorship & Academic Team
 
 * **Lead Author:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
 * **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan
-* **AI-Assisted Engineering:** Google Gemini
+* **AI-Assisted Engineering:** Google Gemini; review and corrections assisted by Codex
 
 ---
 
@@ -29,8 +47,8 @@ An autonomous, interactive web simulator designed for students, educators, clini
 
 * **100% Offline Architecture (Zero-CDN):** Runs completely offline by simply double-clicking the HTML file in any modern browser. Built with a self-contained CSS design system, inline SVG iconography, and native system typography—zero external network calls.
 * **3-Tab Pedagogical Architecture:**
-  1. **Concise Interactive Simulator:** Clutter-free visual workspace featuring a 2D AABB anti-collision label engine, a live clinical verdict banner, an active AUC grade reference table, and a 100-block patient cohort icon array ($N = 1,000$).
-  2. **Theoretical Handbook & Clinical Guide:** Comprehensive 6-chapter academic reference covering continuous distributions, *SnNout* and *SpPin* clinical rules, the Accuracy Paradox, ROC/AUC geometry, the Bayesian Bridge (step-by-step *Odds* updating and Fagan's Nomogram), and 9 foundational peer-reviewed references.
+  1. **Concise Interactive Simulator:** Clutter-free visual workspace featuring a 2D AABB anti-collision label engine, a prior/post-test disease probability summary, an active AUC grade reference table, and a 100-block cohort icon array with fractional colors ($N = 1,000$).
+  2. **Theoretical Handbook & Clinical Guide:** Comprehensive 6-chapter academic reference covering continuous distributions, *SnNout* and *SpPin* clinical rules, the Accuracy Paradox, ROC/AUC geometry, the Bayesian Bridge (step-by-step *Odds* updating and Fagan's Nomogram), and foundational peer-reviewed references.
   3. **20 Clinical Vignettes & Self-Assessment Bank:** 20 graded clinical decision challenges across 5 thematic blocks (Cutoff & Polarity, Confusion Matrix & Intrinsic Metrics, Prevalence & Accuracy Paradox, ROC Curve & Youden's Index, and Likelihood Ratios & Bayes), complete with category filtering, live score tracking, and one-click simulator loading.
 * **8 Built-in Clinical Scenarios with Distinct Geometries:**
   1. *High-Sensitivity Troponin* ($\mu_H=38, \sigma_H=8 \mid \mu_D=62, \sigma_D=8, c=50, P=15\%$ — Classic elevated biomarker).
@@ -38,16 +56,16 @@ An autonomous, interactive web simulator designed for students, educators, clini
   3. *Excellent Assay* ($\mu_H=26, \sigma_H=5.5 \mid \mu_D=74, \sigma_D=6, c=49.5, P=20\%$ — High population separation, $\text{AUC} > 0.99$).
   4. *Weak Assay* ($\mu_H=46, \sigma_H=11 \mid \mu_D=54, \sigma_D=11, c=50, P=25\%$ — Substantial biological overlap).
   5. *Unequal Variance* ($\mu_H=34, \sigma_H=4.5 \mid \mu_D=62, \sigma_D=16, c=45, P=15\%$ — Biological heteroscedasticity $\sigma_D > \sigma_H$).
-  6. *Emergency Rule-Out D-Dimer* ($\mu_H=32, \sigma_H=9 \mid \mu_D=64, \sigma_D=11, c=42, P=12\%$ — Clinical *SnNout* application, $\text{LR}^- < 0.1$).
-  7. *Oncology Confirmation* ($\mu_H=42, \sigma_H=6 \mid \mu_D=68, \sigma_D=10, c=60, P=30\%$ — Clinical *SpPin* application, $\text{LR}^+ > 10$).
-  8. *Population Screening for Rare Disease* ($\mu_H=28, \sigma_H=5 \mid \mu_D=58, \sigma_D=12, c=41, P=1\%$ — Demonstrating the PPV and Accuracy Paradox).
+  6. *Emergency Rule-Out D-Dimer* ($\mu_H=32, \sigma_H=9 \mid \mu_D=64, \sigma_D=11, c=42, P=12\%$ — Synthetic sensitivity example, $\text{LR}^- < 0.1$).
+  7. *Oncology Confirmation* ($\mu_H=42, \sigma_H=6 \mid \mu_D=68, \sigma_D=10, c=60, P=30\%$ — Synthetic specificity example, $\text{LR}^+ > 10$).
+  8. *Rare Disease Screening* ($\mu_H\approx29.368261, \sigma_H=5 \mid \mu_D\approx58.709492, \sigma_D=12, c=41, P=1\%$ — Calibrated to Sens≈93%, Spec≈99%, PPV≈48.4%; full precision is retained in the application).
 * **Trilingual with Auto-Detection:** Automatically detects user browser language preference (Catalan, Spanish, English) with manual override and fault-tolerant `localStorage` persistence.
 
 ---
 
 ## 📐 Mathematical Foundations
 
-### 1. Intrinsic Metrics (Prevalence-Independent)
+### 1. Conditional Metrics (Fixed Distributions)
 
 Considering the healthy control population $X_H \sim \mathcal{N}(\mu_H, \sigma_H^2)$ and the diseased population $X_D \sim \mathcal{N}(\mu_D, \sigma_D^2)$ with cumulative distribution function $\Phi(x; \mu, \sigma)$:
 
@@ -82,13 +100,45 @@ Given a pre-test disease prevalence $P = P(\text{Disease})$ and pre-test odds $\
 
 ---
 
+## Model assumptions and interpretation
+
+The eight named scenarios are **synthetic teaching examples in arbitrary units**, not clinically calibrated assays or treatment protocols. “No disease” means absence of the target disease according to a reference standard.
+
+- The two curves are conditional Gaussian densities; each full area is one. Their height is not a patient count. Changing prevalence alone leaves these distributions unchanged.
+- Sensitivity, specificity and likelihood ratios remain prevalence-independent **only while the conditional distributions and cutoff stay fixed**. Real clinical populations can differ through the spectrum effect.
+- The density viewport covers at least six standard deviations on both sides of each mean. Gaussian tails extend beyond it; negative values are a mathematical model feature.
+- The full ROC includes (0,0) and (1,1). Its AUC respects the chosen polarity and can fall below 0.5. AUC=0.5 alone does not imply identical distributions or a diagonal ROC when variances differ.
+- Clinical interpretation reports prior disease probability, PPV and disease probability after a negative (1−NPV). SnNout, SpPin, LR+>10 and LR−<0.1 do not guarantee confirmation or exclusion. At 90% prior probability, LR−=0.1 still leaves 47.4% post-test probability.
+- The N=1,000 table contains **rounded expected counts**, not a random sample. Cell percentages use the whole cohort. Predictive values use unrounded probabilities and may differ from ratios based on the displayed counts. Fractional colors in 100 icons preserve all integer table counts (one icon = ten people).
+- Undefined predictive values are displayed as “—”; infinite likelihood ratios as “∞”. Very small probabilities are formatted without changing their values. The model does not estimate clinical confidence intervals.
+
+### AUC and Youden
+
+For independent Gaussian case and control measurements:
+
+$$AUC_{higher}=\Phi\!\left(\frac{\mu_D-\mu_H}{\sqrt{\sigma_D^2+\sigma_H^2}}\right),\qquad AUC_{lower}=1-AUC_{higher}.$$
+
+$$J(c)=Sensitivity(c)-FPR(c),\qquad Balanced\ accuracy=\frac{J(c)+1}{2}.$$
+
+The optimizer searches **[5,95] in steps of 0.1**, including both endpoints. It finds an approximate maximum over that range, weights group error rates equally, and does not incorporate prevalence or costs per patient. It does not search for unrestricted or two-cutoff decision rules.
+
+### Accessibility and validation
+
+Controls have programmatic labels; tabs support arrow keys, Home and End; chart summaries and the confusion matrix are available as text and a semantic table. Language changes update the document language. Tooltips work with keyboard focus, quiz feedback is announced, and answer focus is preserved. Numeric entries are validated before state changes.
+
+Run the standalone numerical regression checks with `node tests/verify.mjs`. They cover Gaussian tails, polarity, Bayesian identities, population totals, ROC integration, Youden and calibrated quiz scenarios. These checks do not replace a visual browser or assistive-technology audit.
+
+References: [NIST normal distribution](https://www.itl.nist.gov/div898/handbook/eda/section3/eda3661.htm), [BMJ likelihood ratios](https://www.bmj.com/content/329/7458/168), [BMJ spectrum effect](https://www.bmj.com/content/353/bmj.i3139).
+
+---
+
 ## 💻 Local Usage (100% Offline)
 
 1. Clone or download this repository:
    ```bash
    git clone https://github.com/daniel-alomar/SimuladorProvesDiag.git
    ```
-2. Double-click `simulador_diagnostic.html` (or `index.html`) to open it directly in any modern browser (Chrome, Firefox, Safari, Edge). **Works completely offline without internet access, local servers, or build tools.**
+2. Double-click `index.html` to open it directly in any modern browser (Chrome, Firefox, Safari, Edge). **Works completely offline without internet access, local servers, or build tools.**
 
 ---
 
@@ -100,4 +150,4 @@ Suggestions, new clinical scenarios, and bug reports are welcome! Please submit 
 
 ## 📄 License
 
-This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](LICENSE) — you are free to share, copy, distribute, and adapt this work for non-commercial educational and research purposes, provided appropriate attribution is given (**Daniel Alomar-Claramonte, Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan**).
+This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](LICENSE) — you are free to share, copy, distribute, and adapt this work for non-commercial educational and research purposes, provided appropriate attribution is given to the academic team listed above.
