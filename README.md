@@ -18,7 +18,7 @@ An autonomous, interactive web simulator designed for students, educators, clini
 ---
 
 
-On screens of at least 1,100 × 650 CSS pixels, a fixed summary shows TP, FP, FN and TN while controls are adjusted. Disable it with “Keep counts visible” or Escape. It is hidden in other tabs and on small screens. The density chart is capped at 260–360 pixels high on wide screens; the full matrix remains available.
+On screens of at least 1,100 × 650 CSS pixels, a fixed summary shows TP, FP, FN and TN while controls are adjusted. Disable it with “Show confusion matrix summary” or Escape. It is hidden in other tabs and on small screens. The density chart is capped at 260–360 pixels high on wide screens; the full matrix remains available.
 
 ## Layout and guided experiments
 

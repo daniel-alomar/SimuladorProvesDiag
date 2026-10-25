@@ -18,7 +18,7 @@ Un simulador web interactivo y 100% autónomo diseñado para estudiantes, docent
 ---
 
 
-En pantallas de al menos 1.100 × 650 píxeles CSS, un resumen fijo muestra VP, FP, FN y VN mientras ajustas los controles. Se puede desactivar con «Matriz siempre visible» o Esc. Se oculta en otras pestañas y pantallas pequeñas. La gráfica de densidad limita su altura a 260–360 píxeles en pantalla amplia; la matriz completa sigue disponible.
+En pantallas de al menos 1.100 × 650 píxeles CSS, un resumen fijo muestra VP, FP, FN y VN mientras ajustas los controles. Se puede desactivar con «Mostrar resumen de la matriz de confusión» o Esc. Se oculta en otras pestañas y pantallas pequeñas. La gráfica de densidad limita su altura a 260–360 píxeles en pantalla amplia; la matriz completa sigue disponible.
 
 ## Composición y experimentos guiados
 
