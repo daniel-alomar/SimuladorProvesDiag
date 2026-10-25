@@ -548,6 +548,44 @@
       .risk-card dd { font-size:1.2rem; }
     }
     @media print { .dashboard-stack { display:block; } .sim-grid { display:block; } .intro-copy { margin-bottom:1rem; } }
+
+    /* Live counts remain visible without shrinking controls or body text. */
+    :root { --counts-height: 0px; }
+    html { scroll-padding-bottom: var(--counts-height); scroll-padding-top: var(--header-offset); }
+    body.counts-pinned { padding-bottom: var(--counts-height); }
+    .pin-counts { display:flex; align-items:center; gap:.55rem; font-size:.8rem; min-height:36px; cursor:pointer; }
+    .pin-counts input { width:18px; height:18px; accent-color:#245c68; }
+    .live-counts { position:fixed; bottom:0; left:0; right:0; z-index:40; display:grid; grid-template-columns:1.1fr repeat(4,1fr); align-items:center; gap:1rem; padding:.7rem max(1.25rem,calc((100vw - 1520px)/2)); background:#fff; border-top:1px solid #bbceca; box-shadow:0 -4px 20px #153f4510; }
+    .counts-intro strong,.counts-intro small { display:block; }
+    .counts-intro strong { font-size:.82rem; color:#245c68; }
+    .counts-intro small { font-size:.7rem; color:#526462; margin-top:.25rem; }
+    .live-count { margin:0; padding-left:1rem; border-left:3px solid #245c68; }
+    .live-count dt { font-size:.76rem; color:#334155; }
+    .live-count dd { font:750 1.6rem/1.2 var(--font-mono); margin:.2rem 0 0; font-variant-numeric:tabular-nums; }
+    .live-count-vp { border-color:#f59e0b; } .live-count-fp { border-color:#f43f5e; }
+    .live-count-fn { border-color:#6366f1; } .live-count-vn { border-color:#14b8a6; }
+    @media (min-width:1100px) {
+      .canvas-stage { aspect-ratio:auto; height:clamp(260px,32vh,360px); min-height:260px; }
+      .intrinsic-card .kpi-box { padding:.45rem .7rem; }
+      .intrinsic-card .kpi-val { font-size:1.35rem; }
+      .sim-chart .legend-item { padding:.45rem .3rem; }
+    }
+    @media (max-width:1099px),(max-height:649px) { .pin-counts,.live-counts { display:none !important; } }
+    @media print { .pin-counts,.live-counts { display:none !important; } body.counts-pinned { padding-bottom:0; } }
+
+    /* Counts and population pattern share the same live comparison strip. */
+    .live-counts { grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr); gap:1.4rem; padding-block:.6rem; }
+    .live-metrics { min-width:0; }
+    .counts-intro { display:flex; flex-wrap:wrap; align-items:baseline; gap:.35rem .8rem; margin-bottom:.45rem; }
+    .counts-intro small { margin-top:0; }
+    .live-values { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.6rem; }
+    .live-count { padding-left:.65rem; }
+    .live-count dt { font-size:.72rem; }
+    .live-count dd { font-size:1.35rem; margin-top:.15rem; }
+    .live-cohort { margin:0; min-width:0; }
+    #liveDotGrid { display:grid; grid-template-columns:repeat(20,minmax(0,1fr)); grid-template-rows:repeat(5,10px); gap:2px; }
+    #liveDotGrid .cohort-dot { width:100%; height:10px; aspect-ratio:auto; border-radius:1px; }
+    .live-cohort figcaption { font-size:.65rem; line-height:1.4; color:#526462; margin-top:.35rem; }
 </style>
 </head>
 <body><a class="skip-link" href="#view-sim" id="skipToContent">Anar al contingut</a>
@@ -611,8 +649,7 @@
 <main aria-labelledby="tab-sim" class="tab-view active" id="view-sim" role="tabpanel" tabindex="0">
 <div class="container sim-intro">
 <div class="intro-copy"><span class="teaching-badge" id="syntheticBadge"></span><p class="section-eyebrow" id="simEyebrow"></p><h2 id="simHeading"></h2><p id="simIntro"></p><div class="scenario-status"><span id="scenarioNow"></span><strong id="activeScenarioName"></strong></div></div>
-
-<div class="guided-tools"><span id="guidedExplore"></span><button aria-pressed="false" class="demo-button" data-demo="threshold" type="button"><span aria-hidden="true" class="experiment-index">01</span><span class="experiment-copy"><strong id="demoThreshold"></strong><span id="demoThresholdDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><button aria-pressed="false" class="demo-button" data-demo="prevalence" type="button"><span aria-hidden="true" class="experiment-index">02</span><span class="experiment-copy"><strong id="demoPrevalence"></strong><span id="demoPrevalenceDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><button aria-pressed="false" class="demo-button" data-demo="bayes" type="button"><span aria-hidden="true" class="experiment-index">03</span><span class="experiment-copy"><strong id="demoBayes"></strong><span id="demoBayesDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><p id="guidedHint"></p></div>
+<div class="guided-tools"><span id="guidedExplore"></span><button aria-pressed="false" class="demo-button" data-demo="threshold" type="button"><span aria-hidden="true" class="experiment-index">01</span><span class="experiment-copy"><strong id="demoThreshold"></strong><span id="demoThresholdDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><button aria-pressed="false" class="demo-button" data-demo="prevalence" type="button"><span aria-hidden="true" class="experiment-index">02</span><span class="experiment-copy"><strong id="demoPrevalence"></strong><span id="demoPrevalenceDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><button aria-pressed="false" class="demo-button" data-demo="bayes" type="button"><span aria-hidden="true" class="experiment-index">03</span><span class="experiment-copy"><strong id="demoBayes"></strong><span id="demoBayesDesc"></span></span><span aria-hidden="true" class="experiment-arrow">↗</span></button><p id="guidedHint"></p><label class="pin-counts"><input aria-controls="liveCounts" aria-labelledby="pinCountsLabel" checked="" id="pinCounts" type="checkbox"/><span id="pinCountsLabel"></span></label></div>
 </div><div class="container sim-grid">
 <!-- LEFT COLUMN -->
 <!-- RIGHT COLUMN: CONTROLS -->
@@ -1298,7 +1335,15 @@
     "demoThresholdDesc": "Troponina · Mou el punt de tall i compara els casos detectats amb les falses alarmes.",
     "demoPrevalenceDesc": "Malaltia rara · Descobreix per què un positiu pot ser fals quan la prevalença és baixa.",
     "demoBayesDesc": "Bayes · Amb sensibilitat i especificitat del 90%, un risc previ del 20% passa al 69,2% després d’un positiu.",
-    "bayesPreset": "9. Bayes · sensibilitat i especificitat del 90%"
+    "bayesPreset": "9. Bayes · sensibilitat i especificitat del 90%",
+    "liveCountsTitle": "Resultats mentre ajustes",
+    "liveCountsNote": "Cohort de 1.000 · recomptes arrodonits",
+    "liveVPLabel": "Casos detectats · VP",
+    "liveFPLabel": "Falses alarmes · FP",
+    "liveFNLabel": "Casos omesos · FN",
+    "liveVNLabel": "Negatius correctes · VN",
+    "pinCountsLabel": "Matriu sempre visible",
+    "liveDotsCaption": "1 quadre = 10 persones · colors segons VP, FP, FN i VN"
   },
   "es": {
     "appTitle": "Simulador de Pruebas Diagnósticas",
@@ -1492,7 +1537,15 @@
     "demoThresholdDesc": "Troponina · Mueve el punto de corte y compara los casos detectados con las falsas alarmas.",
     "demoPrevalenceDesc": "Enfermedad rara · Descubre por qué un positivo puede ser falso cuando la prevalencia es baja.",
     "demoBayesDesc": "Bayes · Con sensibilidad y especificidad del 90%, un riesgo previo del 20% pasa al 69,2% tras un positivo.",
-    "bayesPreset": "9. Bayes · sensibilidad y especificidad del 90%"
+    "bayesPreset": "9. Bayes · sensibilidad y especificidad del 90%",
+    "liveCountsTitle": "Resultados mientras ajustas",
+    "liveCountsNote": "Cohorte de 1.000 · recuentos redondeados",
+    "liveVPLabel": "Casos detectados · VP",
+    "liveFPLabel": "Falsas alarmas · FP",
+    "liveFNLabel": "Casos omitidos · FN",
+    "liveVNLabel": "Negativos correctos · VN",
+    "pinCountsLabel": "Matriz siempre visible",
+    "liveDotsCaption": "1 cuadro = 10 personas · colores según VP, FP, FN y VN"
   },
   "en": {
     "appTitle": "Diagnostic Test Simulator",
@@ -1686,7 +1739,15 @@
     "demoThresholdDesc": "Troponin · Move the cutoff and compare detected cases with false alarms.",
     "demoPrevalenceDesc": "Rare disease · Discover why a positive result can be false when prevalence is low.",
     "demoBayesDesc": "Bayes · At 90% sensitivity and specificity, a 20% prior risk becomes 69.2% after a positive result.",
-    "bayesPreset": "9. Bayes · 90% sensitivity and specificity"
+    "bayesPreset": "9. Bayes · 90% sensitivity and specificity",
+    "liveCountsTitle": "Results as you adjust",
+    "liveCountsNote": "Cohort of 1,000 · rounded counts",
+    "liveVPLabel": "Detected cases · TP",
+    "liveFPLabel": "False alarms · FP",
+    "liveFNLabel": "Missed cases · FN",
+    "liveVNLabel": "Correct negatives · TN",
+    "pinCountsLabel": "Keep counts visible",
+    "liveDotsCaption": "1 square = 10 people · colours match TP, FP, FN and TN"
   }
 };
 
@@ -2545,6 +2606,7 @@
     function switchTab(tabId) {
       const moveFocus = Boolean(document.activeElement?.closest('.tab-view'));
       state.tab = tabId;
+      updateCountsPin();
       document.querySelectorAll('.tab-btn').forEach(btn => {
         const active = btn.getAttribute('data-tab') === tabId;
         btn.classList.toggle('active', active);
@@ -2606,6 +2668,7 @@
       const handbookEl = document.getElementById('handbookBody');
       if (handbookEl) handbookEl.innerHTML = getHandbookHtml(lang);
       watchChapters();
+      updateCountsPin();
 
       renderQuizList();
       if (state.tab === 'sim') resizeCanvases();
@@ -2645,6 +2708,7 @@
       setDomText('prevDisplay', `${state.prevPct}%`);
       [['VP','vp'],['FP','fp'],['FN','fn'],['VN','vn']].forEach(([suffix,key]) => {
         setDomText(`matrix${suffix}`, m[key].toLocaleString(state.lang));
+        setDomText(`live${suffix}Value`, m[key].toLocaleString(state.lang));
         setDomText(`matrix${suffix}Pct`, `${(m[key] / 10).toFixed(1)}%`);
       });
       setDomText('vppVal', formatProbability(m.vpp));
@@ -2671,11 +2735,12 @@
       const key = [vp,fp,fn,vn].join(',');
       if (key === lastDotCounts) return;
       lastDotCounts = key;
-      const grid = document.getElementById('cohortDotGrid');
+      const grids = ['cohortDotGrid','liveDotGrid'].map(id => document.getElementById(id));
       const counts = [vp,fp,fn,vn], colors = ['#f59e0b','#f43f5e','#6366f1','#14b8a6'];
       // Keep 100 cells, but split boundary cells proportionally: 1 person = 10% of a cell.
       const boundaries = [0];
       counts.forEach(count => boundaries.push(boundaries[boundaries.length - 1] + count));
+      for (const grid of grids) {
       if (grid.children.length !== 100) {
         grid.replaceChildren(...Array.from({ length: 100 }, () => {
           const dot = document.createElement('div'); dot.className = 'cohort-dot'; return dot;
@@ -2688,6 +2753,7 @@
           if (right > left) stops.push(`${colors[j]} ${(left - start) * 10}% ${(right - start) * 10}%`);
         });
         grid.children[i].style.background = stops.length === 1 ? stops[0].split(' ')[0] : `linear-gradient(to right, ${stops.join(', ')})`;
+      }
       }
     }
 
@@ -3458,7 +3524,23 @@
       if (focused && focused !== document.body) focused.focus({preventScroll:true});
       if (state.tab === 'sim') { resizeCanvases(); renderSimulation(); }
     }
+    function updateCountsPin() {
+      const enabled = document.getElementById('pinCounts').checked && state.tab === 'sim' && window.innerWidth >= 1100 && window.innerHeight >= 650;
+      document.body.classList.toggle('counts-pinned',enabled);
+      const dock = document.getElementById('liveCounts');
+      dock.hidden = !enabled;
+      document.documentElement.style.setProperty('--counts-height', enabled ? (dock.getBoundingClientRect().height + 16) + 'px' : '0px');
+    }
     function setupEditorial() {
+      document.getElementById('pinCounts').addEventListener('change',updateCountsPin);
+      window.addEventListener('resize',updateCountsPin);
+      document.addEventListener('keydown',event => {
+        if (event.key === 'Escape' && document.body.classList.contains('counts-pinned')) {
+          document.getElementById('pinCounts').checked=false; updateCountsPin();
+        }
+      });
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateCountsPin).observe(document.getElementById('liveCounts'));
+      updateCountsPin();
       arrangeSimulator();
       window.addEventListener('resize', arrangeSimulator);
       document.addEventListener('click', event => {
@@ -3504,5 +3586,5 @@
       renderSimulation();
     });
   </script>
-</body>
+<aside aria-labelledby="liveCountsTitle" class="live-counts" hidden="" id="liveCounts"><div class="live-metrics"><div class="counts-intro"><strong id="liveCountsTitle"></strong><small id="liveCountsNote"></small></div><div class="live-values"><dl class="live-count live-count-vp"><dt id="liveVPLabel"></dt><dd id="liveVPValue">—</dd></dl><dl class="live-count live-count-fp"><dt id="liveFPLabel"></dt><dd id="liveFPValue">—</dd></dl><dl class="live-count live-count-fn"><dt id="liveFNLabel"></dt><dd id="liveFNValue">—</dd></dl><dl class="live-count live-count-vn"><dt id="liveVNLabel"></dt><dd id="liveVNValue">—</dd></dl></div></div><figure class="live-cohort"><div aria-hidden="true" id="liveDotGrid"></div><figcaption id="liveDotsCaption"></figcaption></figure></aside></body>
 </html>

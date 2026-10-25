@@ -17,6 +17,9 @@ Un simulador web interactiu i 100% autònom dissenyat per a estudiants, docents 
 
 ---
 
+
+En pantalles de com a mínim 1.100 × 650 píxels CSS, un resum fix mostra VP, FP, FN i VN mentre ajustes els controls. Es pot desactivar amb «Matriu sempre visible» o Esc. S’amaga a les altres pestanyes i en pantalles petites. El gràfic de densitat té una alçada limitada a 260–360 píxels en pantalla ampla; la matriu completa continua disponible.
+
 ## Composició i experiments guiats
 
 En pantalles amples, els panells flueixen en dues columnes independents: distribucions, probabilitats i recomptes a l’esquerra; controls i ROC a la dreta. S’eviten així les cel·les buides entre panells de diferent alçada. Per sota de 1.100 píxels, l’ordre és distribucions, controls, probabilitats, recomptes i ROC.
