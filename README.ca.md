@@ -89,7 +89,7 @@ La navegació inclou accés directe al contingut, indicador de capítol actiu i 
 ## 👥 Autoria i Equip Docent
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
+* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carot-Sans
 * **Desenvolupament tècnic assistit:** Google Gemini; revisió i correccions amb assistència de Codex
 
 ---
@@ -212,3 +212,5 @@ L’escenari 10 representa scores sintètics entre 0 i 1 davant d’un patró bi
 Prova suggerida: escenari 10, prevalença 1% → 20%, sense canviar distribucions. L’AUPRC passa aproximadament de 0,5483 a 0,9118; l’AUROC no canvia. La PR no és independent de la prevalença i no substitueix els costos clínics.
 
 Verificació: 21 grups numèrics i 23 grups d’interacció en DOM simulat. Inclou referències independents amb erfc, normalització de densitats, transformació de scores i actualització dels controls. No s’ha verificat visualment aquesta versió en un navegador real.
+
+La «Guia dels escenaris», dins de Fonaments teòrics i guia clínica, descriu els deu exemples amb context, un experiment suggerit i límits d’interpretació. Les fitxes són desplegables i permeten carregar els valors inicials al simulador. Hi ha un enllaç directe des del simulador; disponible en català, castellà i anglès.

@@ -89,7 +89,7 @@ La navegación incluye acceso directo al contenido, indicador de capítulo activ
 ## 👥 Autoría y Equipo Docente
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
+* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carot-Sans
 * **Desarrollo técnico asistido:** Google Gemini; revisión y correcciones con asistencia de Codex
 
 ---
@@ -212,3 +212,5 @@ El escenario 10 usa scores sintéticos entre 0 y 1 y un patrón binario. Sus dis
 Prueba el escenario 10 cambiando prevalencia de 1% a 20%: AUPRC ≈ 0,5483 → 0,9118, sin cambiar AUROC. El manual desarrolla la interpretación y sus límites en los tres idiomas.
 
 Verificación: 21 grupos numéricos y 23 de interacción en DOM simulado; referencias independientes con erfc, densidades, controles y scores. Esta versión no se ha comprobado visualmente en un navegador real.
+
+La «Guía de escenarios», dentro de Fundamentos teóricos y guía clínica, describe los diez ejemplos con contexto, un experimento sugerido y límites de interpretación. Las fichas desplegables permiten cargar los valores iniciales. Hay un enlace directo desde el simulador; disponible en los tres idiomas.

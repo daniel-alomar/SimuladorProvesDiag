@@ -89,7 +89,7 @@ Navigation includes a skip link, an active chapter indicator and keyboard focus 
 ## 👥 Authorship & Academic Team
 
 * **Lead Author:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
+* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carot-Sans
 * **AI-Assisted Engineering:** Google Gemini; review and corrections assisted by Codex
 
 ---
@@ -212,3 +212,5 @@ Scenario 10 uses synthetic scores in (0,1) against a binary reference. The distr
 Try scenario 10 and change prevalence from 1% to 20%: AUPRC ≈ 0.5483 → 0.9118 while AUROC remains unchanged. The trilingual handbook explains interpretation and limitations.
 
 Validation: 21 numerical and 23 simulated-DOM interaction groups, including independent erfc references, density normalization and score/control conversions. This version has not been visually verified in a real browser.
+
+The Scenario guide, within Theoretical foundations and clinical guide, describes all ten presets with context, an experiment to try and interpretation limits. Expandable entries load the initial settings into the simulator. A direct link is available from the simulator; all content is provided in three languages.
