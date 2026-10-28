@@ -89,7 +89,7 @@ La navegación incluye acceso directo al contenido, indicador de capítulo activ
 ## 👥 Autoría y Equipo Docente
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
+* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
 * **Desarrollo técnico asistido:** Google Gemini; revisión y correcciones con asistencia de Codex
 
 ---
@@ -202,3 +202,13 @@ Cualquier sugerencia de mejora, propuesta de caso clínico o reporte de errores 
 ## 📄 Licencia
 
 Este proyecto se distribuye bajo la licencia [Creative Commons Reconocimiento-NoComercial 4.0 Internacional (CC BY-NC 4.0)](LICENSE) — eres libre de compartir, copiar, distribuir y adaptar el material para cualquier propósito educativo, de investigación o no comercial, reconociendo adecuadamente la autoría del equipo docente indicado anteriormente.
+
+## Precision–recall e IA de radiografías
+
+ROC y PR se muestran juntas con el punto del umbral actual. PR relaciona sensibilidad (recall) y VPP (precision), muestra la prevalencia de referencia y AUPRC. Con distribuciones fijas, la prevalencia cambia PR pero no ROC. AUPRC se integra con Simpson: 4.096 intervalos sobre ±10 desviaciones de los casos. No es average precision muestral; se reutiliza al cambiar solo el umbral.
+
+El escenario 10 usa scores sintéticos entre 0 y 1 y un patrón binario. Sus distribuciones son logit-normales; μ y σ describen logit(score). La transformación creciente conserva el orden y los cálculos. No es un modelo calibrado ni datos de una IA real; tampoco representa incertidumbre individual.
+
+Prueba el escenario 10 cambiando prevalencia de 1% a 20%: AUPRC ≈ 0,5483 → 0,9118, sin cambiar AUROC. El manual desarrolla la interpretación y sus límites en los tres idiomas.
+
+Verificación: 21 grupos numéricos y 23 de interacción en DOM simulado; referencias independientes con erfc, densidades, controles y scores. Esta versión no se ha comprobado visualmente en un navegador real.

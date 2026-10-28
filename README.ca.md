@@ -89,7 +89,7 @@ La navegació inclou accés directe al contingut, indicador de capítol actiu i 
 ## 👥 Autoria i Equip Docent
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
+* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
 * **Desenvolupament tècnic assistit:** Google Gemini; revisió i correccions amb assistència de Codex
 
 ---
@@ -202,3 +202,13 @@ Qualsevol suggeriment de millora, nou escenari clínic o notificació d'errors e
 ## 📄 Llicència
 
 Aquest projecte es distribueix sota la llicència [Creative Commons Reconeixement-NoComercial 4.0 Internacional (CC BY-NC 4.0)](LICENSE) — ets lliure de compartir, copiar, distribuir i adaptar el material per a qualsevol finalitat docent, de recerca o no comercial, reconeixent degudament l'autoria de l'equip docent esmentat anteriorment.
+
+## Precision–recall i IA de radiografies
+
+La ROC i la PR apareixen juntes, amb el punt del llindar actual. La PR mostra sensibilitat (recall), VPP (precision), la prevalença de referència i AUPRC. Amb distribucions fixes, la prevalença canvia PR i VPP però no ROC. L’àrea PR s’integra amb Simpson en 4.096 intervals sobre ±10 desviacions dels casos; no és average precision mostral. El resultat es reutilitza quan només canvia el llindar.
+
+L’escenari 10 representa scores sintètics entre 0 i 1 davant d’un patró binari. Les distribucions són logit-normals: els controls μ i σ descriuen logit(score). La transformació creixent conserva l’ordenació i els càlculs de classificació; els valors visibles i el llindar s’expressen en l’escala corresponent. No és un model calibrat ni dades d’una IA real. El manual explica també la diferència respecte d’una distribució d’incertesa individual.
+
+Prova suggerida: escenari 10, prevalença 1% → 20%, sense canviar distribucions. L’AUPRC passa aproximadament de 0,5483 a 0,9118; l’AUROC no canvia. La PR no és independent de la prevalença i no substitueix els costos clínics.
+
+Verificació: 21 grups numèrics i 23 grups d’interacció en DOM simulat. Inclou referències independents amb erfc, normalització de densitats, transformació de scores i actualització dels controls. No s’ha verificat visualment aquesta versió en un navegador real.

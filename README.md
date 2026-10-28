@@ -89,7 +89,7 @@ Navigation includes a skip link, an active chapter indicator and keyboard focus 
 ## 👥 Authorship & Academic Team
 
 * **Lead Author:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
+* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes, Gerard Carod-Rovira
 * **AI-Assisted Engineering:** Google Gemini; review and corrections assisted by Codex
 
 ---
@@ -202,3 +202,13 @@ Suggestions, new clinical scenarios, and bug reports are welcome! Please submit 
 ## 📄 License
 
 This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](LICENSE) — you are free to share, copy, distribute, and adapt this work for non-commercial educational and research purposes, provided appropriate attribution is given to the academic team listed above.
+
+## Precision–recall and radiography AI
+
+ROC and PR are shown together with the current operating point. PR plots recall (sensitivity) against precision (PPV), with a prevalence baseline and AUPRC. With conditional distributions fixed, prevalence changes PR but not ROC. Simpson integration uses 4,096 intervals over ±10 case standard deviations. This continuous-model area is not sample average precision; it is cached when only the threshold changes.
+
+Scenario 10 uses synthetic scores in (0,1) against a binary reference. The distributions are logit-normal: μ and σ describe logit(score). The increasing transformation preserves ranking and classification calculations. It is neither a calibrated model nor real AI validation data, and does not represent uncertainty for a single radiograph.
+
+Try scenario 10 and change prevalence from 1% to 20%: AUPRC ≈ 0.5483 → 0.9118 while AUROC remains unchanged. The trilingual handbook explains interpretation and limitations.
+
+Validation: 21 numerical and 23 simulated-DOM interaction groups, including independent erfc references, density normalization and score/control conversions. This version has not been visually verified in a real browser.
