@@ -20,6 +20,51 @@ Un simulador web interactiu i 100% autònom dissenyat per a estudiants, docents 
 
 En pantalles de com a mínim 1.100 × 650 píxels CSS, un resum fix mostra VP, FP, FN i VN mentre ajustes els controls. Es pot desactivar amb «Mostrar resum de la matriu de confusió» o Esc. S’amaga a les altres pestanyes i en pantalles petites. El gràfic de densitat té una alçada limitada a 260–360 píxels en pantalla ampla; la matriu completa continua disponible.
 
+## Lectura visual i accessibilitat
+
+L’entrada principal continua sent el simulador. Els experiments indiquen l’escenari que carreguen (1, 8 i 9). Els capítols de sensibilitat i especificitat, valors predictius i Bayes incorporen una introducció abans de les taules i fórmules.
+
+La ROC té una mida màxima de 260 píxels i els quadres de la cohort tenen alçada limitada per evitar panells excessivament grans. La matriu conserva els denominadors, les etiquetes i els valors.
+
+Les corbes de població es distingeixen amb línies contínues i discontínues. Els quatre resultats tenen també trames: VP sense trama, FP amb diagonals, FN amb diagonals creuades i VN amb línies horitzontals. Les trames es mostren a les àrees del gràfic, la llegenda i les dues graelles de població; les fraccions de quadre conserven el seu patró. Les etiquetes i els recomptes permeten consultar la informació sense dependre del color. Aquestes millores segueixen el criteri WCAG 1.4.1, però no constitueixen una certificació ni una auditoria completa d’accessibilitat.
+
+## Abans de començar: per a qui és i com utilitzar-lo
+
+Una eina oberta a qualsevol persona que vulgui entendre com una prova aporta informació i per què també pot equivocar-se.
+
+### A qui va adreçat?
+
+El simulador està pensat principalment per a estudiants de biomedicina i bioestadística, i també de medicina, infermeria, farmàcia, biologia, epidemiologia i altres ciències de la salut. Pot donar suport a docents, professionals en formació i persones que vulguin reforçar la seva comprensió de les proves diagnòstiques.
+
+No cal tenir una titulació sanitària ni dominar les fórmules. També s’adreça a qualsevol persona interessada a entendre què són els falsos positius i els falsos negatius, per què un resultat no és una certesa i com influeix la freqüència d’una malaltia en la interpretació d’un test.
+
+### Què hi pots aprendre?
+
+- Relacionar el punt de tall amb la sensibilitat, l’especificitat i els dos tipus d’error.
+- Distingir la probabilitat d’un resultat en persones amb o sense malaltia de la probabilitat de malaltia després d’un resultat.
+- Entendre la matriu de confusió, els valors predictius, les raons de versemblança i les corbes ROC.
+- Veure com la prevalença canvia el significat d’un positiu o d’un negatiu, encara que el rendiment condicional de la prova es mantingui fix.
+
+### Quan i com es pot utilitzar?
+
+- A classe: projecta un escenari, demana què passarà en moure el llindar i contrasta les prediccions amb les corbes i els recomptes.
+- En seminaris i pràctiques: compara escenaris en petits grups i explica quin tipus d’error augmenta o disminueix, i per què.
+- En estudi autònom: segueix el manual, prova els experiments guiats i utilitza els casos d’autoavaluació per comprovar què has entès.
+- En formació i divulgació: il·lustra el cribratge de malalties poc freqüents o explica per què cal interpretar els resultats dins d’un context.
+
+### Un recorregut senzill per començar
+
+1. Tria un experiment guiat i llegeix-ne l’objectiu.
+2. Abans de tocar res, prediu què canviarà. Modifica una sola variable cada vegada.
+3. Observa conjuntament les corbes, els quatre recomptes i la probabilitat de malaltia abans i després del test.
+4. Explica amb les teves paraules el resultat i consulta el capítol corresponent del manual.
+
+### Abast i límits
+
+És un simulador educatiu amb dades sintètiques i unitats arbitràries. Els noms dels escenaris serveixen per contextualitzar conceptes: no reprodueixen necessàriament el rendiment d’un test comercial ni els llindars d’un laboratori. No està dissenyat per interpretar una analítica personal, validar una prova ni prendre decisions assistencials. L’aplicació clínica requereix dades validades, un patró de referència adequat i el context de cada pacient.
+
+Es pot obrir al navegador sense instal·lar programes ni crear un compte, i funciona sense connexió un cop tens el fitxer. Les referències externes sí que requereixen Internet. Pots explorar-lo amb el ratolí o el teclat i consultar-lo en català, castellà o anglès. Per reutilitzar-lo o adaptar-lo, consulta la llicència CC BY-NC 4.0 indicada als crèdits.
+
 ## Composició i experiments guiats
 
 En pantalles amples, els panells flueixen en dues columnes independents: distribucions, probabilitats i recomptes a l’esquerra; controls i ROC a la dreta. S’eviten així les cel·les buides entre panells de diferent alçada. Per sota de 1.100 píxels, l’ordre és distribucions, controls, probabilitats, recomptes i ROC.
@@ -30,7 +75,7 @@ Les tres targetes d’inici indiquen el model i l’objectiu de l’experiment. 
 
 El simulador segueix tres passos: **observar les distribucions, modificar el model i interpretar els resultats**. Les targetes de probabilitat mostren el risc previ, el risc després d’un positiu i el risc residual després d’un negatiu. Les ajudes sobre densitat, recomptes i AUC es poden desplegar quan calen.
 
-El manual conté set capítols: distribucions i llindar; sensibilitat i especificitat; valors predictius; ROC, AUC i Youden; Bayes i raons de versemblança; guia d’interpretació clínica; glossari i bibliografia. Cada capítol comença amb una idea clau i les fórmules es poden desplegar.
+El manual inclou «Abans de començar», amb destinataris i usos, i set capítols: distribucions i llindar; sensibilitat i especificitat; valors predictius; ROC, AUC i Youden; Bayes i raons de versemblança; guia d’interpretació clínica; glossari i bibliografia. Cada capítol comença amb una idea clau i les fórmules es poden desplegar.
 
 Els exemples es carreguen directament al simulador: llindar, cribratge rar, marcador disminuït, actualització bayesiana i ROC que creua la diagonal. El cas bayesià compara riscos previs del 5%, 20% i 80% mantenint sensibilitat i especificitat del 90%. El cas de cribratge diferencia els recomptes esperats fraccionaris dels enters que mostra la matriu.
 
@@ -41,7 +86,7 @@ La navegació inclou accés directe al contingut, indicador de capítol actiu i 
 ## 👥 Autoria i Equip Docent
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan
+* **Coautors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
 * **Desenvolupament tècnic assistit:** Google Gemini; revisió i correccions amb assistència de Codex
 
 ---

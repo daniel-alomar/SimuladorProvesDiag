@@ -20,6 +20,51 @@ Un simulador web interactivo y 100% autónomo diseñado para estudiantes, docent
 
 En pantallas de al menos 1.100 × 650 píxeles CSS, un resumen fijo muestra VP, FP, FN y VN mientras ajustas los controles. Se puede desactivar con «Mostrar resumen de la matriz de confusión» o Esc. Se oculta en otras pestañas y pantallas pequeñas. La gráfica de densidad limita su altura a 260–360 píxeles en pantalla amplia; la matriz completa sigue disponible.
 
+## Lectura visual y accesibilidad
+
+La entrada principal sigue siendo el simulador. Los experimentos indican el escenario que cargan (1, 8 y 9). Los capítulos de sensibilidad y especificidad, valores predictivos y Bayes incluyen una introducción antes de tablas y fórmulas.
+
+La ROC tiene un tamaño máximo de 260 píxeles y los cuadros de la cohorte tienen altura limitada. La matriz conserva denominadores, etiquetas y valores.
+
+Las curvas de población se distinguen con líneas continuas y discontinuas. Los cuatro resultados incorporan tramas: VP sin trama, FP con diagonales, FN con diagonales cruzadas y VN con líneas horizontales. Las tramas aparecen en las áreas del gráfico, la leyenda y ambas cuadrículas de población; las fracciones de cuadro mantienen su patrón. Etiquetas y recuentos permiten consultar la información sin depender del color. Estas mejoras siguen WCAG 1.4.1, pero no constituyen una certificación ni una auditoría completa de accesibilidad.
+
+## Antes de empezar: a quién se dirige y cómo utilizarlo
+
+Una herramienta abierta a cualquier persona que quiera entender cómo una prueba aporta información y por qué también puede equivocarse.
+
+### ¿A quién se dirige?
+
+El simulador está pensado principalmente para estudiantes de biomedicina y bioestadística, así como de medicina, enfermería, farmacia, biología, epidemiología y otras ciencias de la salud. Puede ayudar a docentes, profesionales en formación y personas que quieran reforzar su comprensión de las pruebas diagnósticas.
+
+No hace falta una titulación sanitaria ni dominar las fórmulas. También se dirige a cualquier persona interesada en entender los falsos positivos y negativos, por qué un resultado no es una certeza y cómo influye la frecuencia de una enfermedad en la interpretación de una prueba.
+
+### ¿Qué puedes aprender?
+
+- Relacionar el umbral con la sensibilidad, la especificidad y los dos tipos de error.
+- Distinguir la probabilidad de un resultado en personas con o sin enfermedad de la probabilidad de enfermedad después de un resultado.
+- Entender la matriz de confusión, los valores predictivos, las razones de verosimilitud y las curvas ROC.
+- Observar cómo la prevalencia cambia el significado de un positivo o negativo aunque el rendimiento condicional de la prueba se mantenga fijo.
+
+### ¿Cuándo y cómo utilizarlo?
+
+- En clase: proyecta un escenario, pregunta qué ocurrirá al mover el umbral y contrasta las predicciones con las curvas y los recuentos.
+- En seminarios y prácticas: compara escenarios en grupos pequeños y explica qué tipo de error aumenta o disminuye y por qué.
+- En estudio autónomo: sigue el manual, prueba los experimentos guiados y utiliza los casos de autoevaluación para comprobar lo aprendido.
+- En formación y divulgación: ilustra el cribado de enfermedades poco frecuentes o explica por qué los resultados necesitan contexto.
+
+### Un recorrido sencillo para empezar
+
+1. Elige un experimento guiado y lee su objetivo.
+2. Predice qué cambiará y modifica una sola variable cada vez.
+3. Observa las curvas, los cuatro recuentos y la probabilidad de enfermedad antes y después de la prueba.
+4. Explica el resultado con tus palabras y consulta el capítulo correspondiente.
+
+### Alcance y límites
+
+Es un simulador educativo con datos sintéticos y unidades arbitrarias. Los escenarios contextualizan conceptos; no reproducen necesariamente el rendimiento de una prueba comercial ni los umbrales de un laboratorio. No está diseñado para interpretar una analítica personal, validar una prueba ni tomar decisiones asistenciales. La aplicación clínica requiere datos validados, un patrón de referencia adecuado y el contexto de cada paciente.
+
+Se abre en el navegador sin instalar programas ni crear una cuenta, y funciona sin conexión una vez que tienes el archivo. Las referencias externas requieren Internet. Puedes explorarlo con ratón o teclado y consultarlo en catalán, castellano o inglés. Para reutilizarlo o adaptarlo, consulta la licencia CC BY-NC 4.0 de los créditos.
+
 ## Composición y experimentos guiados
 
 En pantallas amplias, los paneles fluyen en dos columnas independientes: distribuciones, probabilidades y recuentos a la izquierda; controles y ROC a la derecha. Se evitan las celdas vacías entre paneles de distinta altura. Por debajo de 1.100 píxeles, el orden es distribuciones, controles, probabilidades, recuentos y ROC.
@@ -30,7 +75,7 @@ Las tres tarjetas iniciales explican el modelo y el objetivo del experimento. «
 
 El simulador sigue tres pasos: **observar las distribuciones, modificar el modelo e interpretar los resultados**. Las tarjetas muestran el riesgo previo, el riesgo tras un positivo y el riesgo residual tras un negativo. Las ayudas sobre densidad, recuentos y AUC son desplegables.
 
-El manual contiene siete capítulos: distribuciones y umbral; sensibilidad y especificidad; valores predictivos; ROC, AUC y Youden; Bayes y razones de verosimilitud; guía de interpretación clínica; glosario y bibliografía. Cada capítulo comienza con una idea clave y las fórmulas se pueden desplegar.
+El manual incluye «Antes de empezar», con destinatarios y usos, y siete capítulos: distribuciones y umbral; sensibilidad y especificidad; valores predictivos; ROC, AUC y Youden; Bayes y razones de verosimilitud; guía de interpretación clínica; glosario y bibliografía. Cada capítulo comienza con una idea clave y las fórmulas se pueden desplegar.
 
 Los ejemplos se cargan en el simulador: umbral, cribado raro, marcador disminuido, actualización bayesiana y ROC que cruza la diagonal. El caso bayesiano compara riesgos previos del 5%, 20% y 80% con sensibilidad y especificidad del 90%. El cribado diferencia recuentos esperados fraccionarios y enteros de la matriz.
 
@@ -41,7 +86,7 @@ La navegación incluye acceso directo al contenido, indicador de capítulo activ
 ## 👥 Autoría y Equipo Docente
 
 * **Autor principal:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan
+* **Coautores:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
 * **Desarrollo técnico asistido:** Google Gemini; revisión y correcciones con asistencia de Codex
 
 ---

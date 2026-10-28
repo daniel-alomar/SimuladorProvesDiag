@@ -20,6 +20,51 @@ An autonomous, interactive web simulator designed for students, educators, clini
 
 On screens of at least 1,100 × 650 CSS pixels, a fixed summary shows TP, FP, FN and TN while controls are adjusted. Disable it with “Show confusion matrix summary” or Escape. It is hidden in other tabs and on small screens. The density chart is capped at 260–360 pixels high on wide screens; the full matrix remains available.
 
+## Visual interpretation and accessibility
+
+The simulator remains the starting tab. Guided experiments identify the scenarios they load (1, 8 and 9). Sensitivity and specificity, predictive values, and Bayes chapters now introduce the concepts before their tables and formulas.
+
+The ROC plot is capped at 260 pixels and cohort cells have a bounded height. The matrix retains its denominators, labels and values.
+
+Solid and dashed lines distinguish the population curves. Outcome patterns provide an additional cue: TP solid, FP diagonal, FN crosshatched and TN horizontal. Patterns appear in plot regions, the legend and both population grids, including fractional cells. Labels and counts also make information available without colour alone. These changes follow WCAG 1.4.1 but do not constitute certification or a complete accessibility audit.
+
+## Before you start: who it is for and how to use it
+
+An open learning tool for anyone who wants to understand how a test provides information—and why it can also be wrong.
+
+### Who is it for?
+
+The simulator is primarily intended for biomedical and biostatistics students, as well as learners in medicine, nursing, pharmacy, biology, epidemiology and other health sciences. It also supports educators, professionals in training and anyone revisiting diagnostic testing.
+
+You do not need a healthcare qualification or prior mastery of the formulas. Anyone can use it to explore false positives and false negatives, understand why a result is not a certainty, and see how disease frequency affects interpretation.
+
+### What can you learn?
+
+- Connect the cutoff with sensitivity, specificity and both types of error.
+- Distinguish the probability of a result among people with or without disease from disease probability after a result.
+- Understand confusion matrices, predictive values, likelihood ratios and ROC curves.
+- See how prevalence changes the meaning of a positive or negative result while conditional test performance remains fixed.
+
+### When and how can you use it?
+
+- In class: display a scenario, ask learners to predict the effect of moving the cutoff, then compare their predictions with the curves and counts.
+- In seminars and practical sessions: compare scenarios in small groups and explain which errors increase or decrease, and why.
+- For independent study: follow the handbook, try guided experiments and check your understanding with the self-assessment cases.
+- For training and public education: illustrate rare-disease screening or explain why test results need context.
+
+### A simple starting route
+
+1. Choose a guided experiment and read its objective.
+2. Predict what will change, then adjust one variable at a time.
+3. Compare the curves, four counts and disease probability before and after the test.
+4. Explain the result in your own words and consult the relevant handbook chapter.
+
+### Scope and limits
+
+This is an educational simulator using synthetic data and arbitrary units. Scenario names provide context; they do not necessarily reproduce a commercial test’s performance or laboratory cutoffs. It is not designed to interpret personal laboratory results, validate a test or make patient-care decisions. Clinical application requires validated evidence, a suitable reference standard and the individual patient’s context.
+
+Open it in a browser without installing software or creating an account. Once you have the file, it works offline; external references require Internet access. Explore with a mouse or keyboard in Catalan, Spanish or English. For reuse or adaptation, see the CC BY-NC 4.0 licence in the credits.
+
 ## Layout and guided experiments
 
 Wide screens use two independently flowing columns: distributions, probabilities and counts on the left; controls and ROC on the right. This removes empty grid cells between panels of different heights. Below 1,100 pixels, the order is distributions, controls, probabilities, counts and ROC.
@@ -30,7 +75,7 @@ The three starting cards explain the model and purpose of each experiment. “In
 
 The simulator follows three steps: **observe distributions, adjust the model, and interpret results**. Probability cards show prior risk, disease probability after a positive result, and residual disease risk after a negative result. Density, count and AUC explanations can be expanded on demand.
 
-The handbook has seven chapters: distributions and thresholds; sensitivity and specificity; predictive values; ROC, AUC and Youden; Bayes and likelihood ratios; clinical interpretation; glossary and references. Each chapter starts with a key idea, with expandable formulas.
+The handbook includes “Before you start”, covering its audience and uses, followed by seven chapters: distributions and thresholds; sensitivity and specificity; predictive values; ROC, AUC and Youden; Bayes and likelihood ratios; clinical interpretation; glossary and references. Each chapter starts with a key idea, with expandable formulas.
 
 Worked examples load directly into the simulator: thresholds, rare screening, a decreased marker, Bayesian updating, and a crossing ROC. The Bayesian example compares prior risks of 5%, 20% and 80% at 90% sensitivity and specificity. The screening example distinguishes fractional expected counts from rounded matrix counts.
 
@@ -41,7 +86,7 @@ Navigation includes a skip link, an active chapter indicator and keyboard focus 
 ## 👥 Authorship & Academic Team
 
 * **Lead Author:** [Daniel Alomar-Claramonte](https://github.com/daniel-alomar)
-* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan
+* **Co-authors:** Jordi Piera-Jimenez, Ferran Torres, Laia Humbert-Vidan, Caridad Pontes
 * **AI-Assisted Engineering:** Google Gemini; review and corrections assisted by Codex
 
 ---
