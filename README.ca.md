@@ -20,6 +20,9 @@ Un simulador web interactiu i 100% autònom dissenyat per a estudiants, docents 
 
 En pantalles de com a mínim 1.100 × 650 píxels CSS, un resum fix mostra VP, FP, FN i VN mentre ajustes els controls. Es pot desactivar amb «Mostrar resum de la matriu de confusió» o Esc. S’amaga a les altres pestanyes i en pantalles petites. El gràfic de densitat té una alçada limitada a 260–360 píxels en pantalla ampla; la matriu completa continua disponible.
 
+
+La capçalera presenta un únic títol, una frase explicativa i l’enllaç als destinataris i usos del manual. La nota de dades sintètiques acompanya l’escenari actiu. El capítol 3 diferencia explícitament «95% de fiabilitat» de la probabilitat de malaltia després d’un positiu. El capítol 5 afegeix un exemple de dues proves positives: amb prevalença de l’1% i sensibilitat i especificitat del 95%, el risc passa de l’1% al 16,1% i després al 78,5%, només sota independència condicional. Repetir la mateixa prova no garanteix aquesta condició. És un exemple teòric del manual; els controls continuen modelant una única prova.
+
 ## Lectura visual i accessibilitat
 
 L’entrada principal continua sent el simulador. Els experiments indiquen l’escenari que carreguen (1, 8 i 9). Els capítols de sensibilitat i especificitat, valors predictius i Bayes incorporen una introducció abans de les taules i fórmules.

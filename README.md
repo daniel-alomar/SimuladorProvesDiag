@@ -20,6 +20,9 @@ An autonomous, interactive web simulator designed for students, educators, clini
 
 On screens of at least 1,100 × 650 CSS pixels, a fixed summary shows TP, FP, FN and TN while controls are adjusted. Disable it with “Show confusion matrix summary” or Escape. It is hidden in other tabs and on small screens. The density chart is capped at 260–360 pixels high on wide screens; the full matrix remains available.
 
+
+The header contains one heading, one explanatory sentence and a link to the handbook’s audience and usage guide. The synthetic-data note appears alongside the active scenario. Chapter 3 distinguishes “95% reliable” from disease probability after a positive result. Chapter 5 adds a two-positive-test example: at 1% prevalence and 95% sensitivity and specificity, risk changes from 1% to 16.1% and then 78.5%, only under conditional independence. Repeating the same test does not guarantee this condition. This is a theoretical handbook example; the controls still model a single test.
+
 ## Visual interpretation and accessibility
 
 The simulator remains the starting tab. Guided experiments identify the scenarios they load (1, 8 and 9). Sensitivity and specificity, predictive values, and Bayes chapters now introduce the concepts before their tables and formulas.

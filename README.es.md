@@ -20,6 +20,9 @@ Un simulador web interactivo y 100% autónomo diseñado para estudiantes, docent
 
 En pantallas de al menos 1.100 × 650 píxeles CSS, un resumen fijo muestra VP, FP, FN y VN mientras ajustas los controles. Se puede desactivar con «Mostrar resumen de la matriz de confusión» o Esc. Se oculta en otras pestañas y pantallas pequeñas. La gráfica de densidad limita su altura a 260–360 píxeles en pantalla amplia; la matriz completa sigue disponible.
 
+
+La cabecera presenta un único título, una frase explicativa y el enlace a los destinatarios y usos del manual. La nota de datos sintéticos acompaña al escenario activo. El capítulo 3 distingue «95% de fiabilidad» de la probabilidad de enfermedad tras un positivo. El capítulo 5 añade dos pruebas positivas: con prevalencia del 1% y sensibilidad y especificidad del 95%, el riesgo pasa del 1% al 16,1% y después al 78,5%, solo bajo independencia condicional. Repetir la misma prueba no garantiza esa condición. Es un ejemplo teórico del manual; los controles siguen modelando una sola prueba.
+
 ## Lectura visual y accesibilidad
 
 La entrada principal sigue siendo el simulador. Los experimentos indican el escenario que cargan (1, 8 y 9). Los capítulos de sensibilidad y especificidad, valores predictivos y Bayes incluyen una introducción antes de tablas y fórmulas.
