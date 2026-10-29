@@ -132,3 +132,11 @@ Control del resum de la matriu traslladat a la columna introductòria, després 
 ## Format de les fórmules del manual
 
 Revisats els tres idiomes: 8 blocs i 29 expressions per idioma, amb equacions separades, fraccions tipogràfiques, exponents i subíndexs coherents. Definicions de sensibilitat i especificitat separades del paràgraf i explicació de la probabilitat condicionada. PR i AUPRC deixen de presentar-se com a codi. Lectura textual accessible per a cada expressió i blocs desplaçables amb teclat en pantalles estretes, sense dependències externes. Superats els 21 grups numèrics i 24 d’interacció; pendent la inspecció visual en navegador real.
+
+## Reorganització editorial dels README — 29 d’octubre de 2026
+
+Els tres README descriuen el producte actual amb la mateixa estructura: inici, continguts, model, accessibilitat, autoria i llicència. S’eliminen repeticions, detalls de disposició i narratives d’implementació. ROC i PR s’integren amb la resta de mètriques; la IA queda contextualitzada entre els deu escenaris. Es corregeixen les referències antigues a vuit escenaris i sis capítols. La llicència tanca el document i enllaça a Creative Commons.
+
+Els detalls de les incorporacions es conserven a les entrades anteriors d’aquest historial: integració AUPRC amb Simpson en 4.096 intervals sobre ±10 desviacions dels casos, reutilització del resultat quan només varia el llindar, exemple AUPRC 0,5483 → 0,9118 en canviar la prevalença de l’1% al 20%, i comprovacions numèriques i d’interacció. El manual de l’aplicació continua contenint les explicacions i fórmules detallades.
+
+Criteri editorial: cada evolució s’ha d’integrar en el seu context i amb un pes proporcional al conjunt. El README presenta l’eina; CANVIS.md recull les novetats i les verificacions. No s’afegeixen apèndixs de novetats després de la llicència.
